@@ -1,0 +1,101 @@
+{
+  "version": "1.0",
+  "triggers": [
+    {
+      "trigger_phrase": "გთხოვთ",
+      "intent": "communication",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "გიგზავნით",
+      "intent": "communication",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "გაცნობებთ",
+      "intent": "communication",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "წარმოგიდგენთ",
+      "intent": "communication",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "გთხოვთ უზრუნველყოთ",
+      "intent": "communication",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "დავალდეს",
+      "intent": "decision",
+      "confidence": 0.95
+    },
+    {
+      "trigger_phrase": "დაევალოს",
+      "intent": "decision",
+      "confidence": 0.95
+    },
+    {
+      "trigger_phrase": "დამტკიცდეს",
+      "intent": "decision",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "განისაზღვროს",
+      "intent": "decision",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "განხილვის შედეგად",
+      "intent": "documentation",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "მონაწილეობდნენ",
+      "intent": "documentation",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "დღის წესრიგი",
+      "intent": "documentation",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "სხდომის ფარგლებში",
+      "intent": "documentation",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "ვადასტურებთ",
+      "intent": "confirmation",
+      "confidence": 0.95
+    },
+    {
+      "trigger_phrase": "ეძლევა ცნობა",
+      "intent": "confirmation",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "დასტურდება",
+      "intent": "confirmation",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "მოგახსენებთ",
+      "intent": "analysis",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "აღსანიშნავია რომ",
+      "intent": "analysis",
+      "confidence": 0.9
+    },
+    {
+      "trigger_phrase": "შესაბამისად",
+      "intent": "analysis",
+      "confidence": 0.9
+    }
+  ]
+}
+
