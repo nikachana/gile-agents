@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "intents": [
+    {
+      "intent_id": "communication",
+      "description": "Institutional communication with an external or internal audience where the primary goal is to convey information or a position.",
+      "default_format": "official_letter",
+      "typical_triggers": [
+        "official letter",
+        "formal letter",
+        "response to citizen",
+        "send a letter",
+        "write to organization"
+      ]
+    },
+    {
+      "intent_id": "decision",
+      "description": "Formal decisions, orders, or decrees that have binding administrative or legal effect.",
+      "default_format": "order",
+      "typical_triggers": [
+        "order",
+        "decree",
+        "administrative decision",
+        "directive",
+        "resolution"
+      ]
+    },
+    {
+      "intent_id": "documentation",
+      "description": "Recording what happened in meetings or similar events, including agenda items, discussions, decisions, and action items.",
+      "default_format": "meeting_minutes",
+      "typical_triggers": [
+        "meeting minutes",
+        "protocol of meeting",
+        "meeting notes",
+        "document what happened",
+        "record the meeting"
+      ]
+    },
+    {
+      "intent_id": "confirmation",
+      "description": "Official confirmation or certification of a fact, status, or participation.",
+      "default_format": "certificate",
+      "typical_triggers": [
+        "certificate",
+        "confirm employment",
+        "proof of status",
+        "issue confirmation",
+        "attest"
+      ]
+    },
+    {
+      "intent_id": "analysis",
+      "description": "Internal analysis, guidance, or recommendations, usually for internal audiences and shorter than a full policy document.",
+      "default_format": "memo",
+      "typical_triggers": [
+        "memo",
+        "internal note",
+        "inform staff",
+        "internal guidance",
+        "brief note"
+      ]
+    }
+  ]
+}

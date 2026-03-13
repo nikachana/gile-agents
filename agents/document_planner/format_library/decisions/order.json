@@ -1,18 +1,7 @@
 {
   "format_id": "order",
-  "display_name": "Order / Decree",
   "category": "decisions",
-  "purpose": "Record and communicate formal institutional orders, decrees, or decisions with clear legal or administrative effect.",
-  "typical_use_cases": [
-    "Issuing an internal administrative order",
-    "Formalizing a decision of a director or board",
-    "Documenting changes to procedures or responsibilities"
-  ],
-  "selection_hints": [
-    "The request mentions an 'order', 'decree', or formal decision document",
-    "The content has binding or directive force",
-    "The structure needs numbered articles or points"
-  ],
+  "description": "Formal institutional orders, decrees, or decisions with binding administrative or legal effect.",
   "required_sections": [
     "header",
     "title",
@@ -26,61 +15,5 @@
     "background",
     "distribution_list",
     "attachments_note"
-  ],
-  "section_order": [
-    "header",
-    "title",
-    "preamble",
-    "background",
-    "legal_basis",
-    "decision_points",
-    "effective_date",
-    "attachments_note",
-    "distribution_list",
-    "signature_block"
-  ],
-  "section_definitions": {
-    "header": {
-      "purpose": "Identify the issuing institution and organizational unit.",
-      "required": true
-    },
-    "title": {
-      "purpose": "Provide a concise title summarizing the order or decree.",
-      "required": true
-    },
-    "preamble": {
-      "purpose": "Briefly state the context and overall intent of the order.",
-      "required": true
-    },
-    "background": {
-      "purpose": "Summarize relevant circumstances, prior decisions, or motivations.",
-      "required": false
-    },
-    "legal_basis": {
-      "purpose": "List legal or regulatory grounds authorizing the decision.",
-      "required": true
-    },
-    "decision_points": {
-      "purpose": "Enumerate the operative provisions, usually as numbered items or articles.",
-      "required": true
-    },
-    "effective_date": {
-      "purpose": "Indicate when the order enters into force and any transition periods.",
-      "required": true
-    },
-    "attachments_note": {
-      "purpose": "List annexes or supporting documents attached to the order.",
-      "required": false
-    },
-    "distribution_list": {
-      "purpose": "Specify internal or external recipients responsible for execution or awareness.",
-      "required": false
-    },
-    "signature_block": {
-      "purpose": "Provide the name, title, and signature line of the authorized decision‑maker.",
-      "required": true
-    }
-  },
-  "planner_notes": "Use this format when the task involves a formal decision document with clear operative provisions. Emphasize the separation between background, legal basis, and operative decision points. Leave legal phrasing and institutional tone to GILE."
+  ]
 }
-

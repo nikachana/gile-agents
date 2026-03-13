@@ -10,12 +10,12 @@ In the overall system, the planner participates in the following high‑level fl
 
 Incoming message  
 → **Router Agent** (classifies and routes)  
-→ **Document Planner** (designs structure and sections)  
+→ **Document Planner** (selects intent, format, and sections)  
 → **Reply Agent** (creates the initial draft)  
 → **GILE** (translation / rewrite / refinement / validation)  
 → **Institutional Georgian output**
 
-The Document Planner produces a **structured plan**, not final text. It defines the skeleton and intent of the response or document, which the Reply Agent and GILE then turn into fully written, institutional Georgian output.
+The Document Planner produces a **structured plan**, not final text. It defines the **institutional intent**, **document format**, and **section‑level skeleton** of the response or document, which the Reply Agent and GILE then turn into fully written, institutional Georgian output.
 
 ### 3. Scope
 
@@ -36,11 +36,12 @@ It is a **planning component**, not a language generator.
 
 ### 4. Input Contract (v1)
 
-Planner v1 expects a simple JSON input describing the task and context:
+Planner v1 expects a simple JSON input describing the task, intent hints, and context:
 
 ```json
 {
   "task_type": "string – e.g., reply_draft | document_draft | document_plan",
+  "intent_hint": "optional string – high‑level intent hint, e.g., communication | decision | documentation | confirmation | analysis",
   "message_text": "string – primary user or system message to respond to",
   "metadata": {
     "channel": "optional string",
@@ -66,7 +67,7 @@ Planner v1 returns a structured plan in JSON:
 ```json
 {
   "plan_type": "string – one of reply_structure | document_structure | plan_only",
-  "document_format": "string – optional institutional format, e.g., official_letter",
+  "document_format": "string – optional institutional format, e.g., official_letter | order | meeting_minutes | certificate | memo",
   "sections": [
     {
       "section_id": "string – stable identifier, e.g., intro, summary, actions",
@@ -84,9 +85,44 @@ Planner v1 returns a structured plan in JSON:
 }
 ```
 
-Each **section** must at least specify a `section_id` and `purpose`. The optional `document_format` field allows the planner to declare formats such as `"official_letter"`, `"meeting_minutes"`, or `"protocol"`. Titles and additional flags are internal aids for drafting, not final text.
+Each **section** must at least specify a `section_id` and `purpose`. The optional `document_format` field allows the planner to declare formats such as `"official_letter"`, `"order"`, `"meeting_minutes"`, `"certificate"`, or `"memo"`. Titles and additional flags are internal aids for drafting, not final text.
 
-### 6. Supported Plan Types
+### 6. Intent Detection and Format Selection
+
+Planner v1 uses a simple intent taxonomy, defined in `intent_taxonomy.json`, to interpret the task:
+
+- **communication** → default format: `official_letter`
+- **decision** → default format: `order`
+- **documentation** → default format: `meeting_minutes`
+- **confirmation** → default format: `certificate`
+- **analysis** → default format: `memo`
+
+Intent may be inferred from:
+
+- Router‑provided task type and metadata.
+- Explicit user language (e.g., “send an official letter”, “prepare a decision”, “write meeting minutes”, “issue a certificate”, “draft an internal memo”).
+- Institutional context or channel (internal vs. external).
+
+Planner v1:
+
+- Interprets the **intent_hint** and message content.
+- Selects an **intent_id** from the taxonomy.
+- Maps that intent to a **document_format** (one of the v1 formats).
+
+### 7. Section Loading
+
+Once a document format is selected, Planner v1:
+
+- Loads the corresponding **format definition** from `format_library/` (e.g., `official_letter.json`, `order.json`).
+- Resolves each section against the **section vocabulary** in `section_vocabulary/sections.json` to ensure consistent `section_id` semantics.
+- Builds the `sections` array for the plan, preserving:
+  - required vs. optional flags,
+  - canonical section order,
+  - section‑level purpose descriptions (for drafting guidance).
+
+Planner v1 may adjust which optional sections are included based on metadata and context, but it does **not** generate final wording or institutional Georgian phrasing.
+
+### 8. Supported Plan Types
 
 Planner v1 recognizes the following `plan_type` values:
 
@@ -96,7 +132,7 @@ Planner v1 recognizes the following `plan_type` values:
 
 These plan types describe **how the response is organized**, not the exact language used.
 
-### 7. Planning Rules
+### 9. Planning Rules
 
 High‑level mapping rules between tasks and plan types:
 
@@ -110,7 +146,18 @@ Additional rules:
 - Section `purpose` fields should focus on **what to cover**, not on how to phrase it.
 - Any examples or hints are for internal guidance; **GILE remains responsible** for institutional Georgian wording and refinement.
 
-### 8. Examples
+### 10. Relationship with Reply Agent and GILE
+
+- **Reply Agent**:
+  - Consumes the planner’s output (plan type, document format, sections, drafting instructions).
+  - Creates the **initial draft** in English or provisional Georgian, respecting section order and purpose.
+- **GILE**:
+  - Receives the draft from the Reply Agent.
+  - Performs **translation, rewrite, refinement, terminology enforcement, and validation** to produce institutional Georgian output.
+
+The planner **never replaces** the Reply Agent or GILE. Its sole role is to express **intent, format choice, and structure** in a machine‑readable plan.
+
+### 11. Examples
 
 #### Example 1 – Simple reply structure for a complaint
 
@@ -232,7 +279,7 @@ Additional rules:
 }
 ```
 
-### 9. Status
+### 12. Status
 
 This document defines the **Document Planner v1 specification** only. No runtime implementation, classes, or API clients exist yet in this repository; planning logic will be implemented later in alignment with this contract, while GILE remains the external language layer.
 

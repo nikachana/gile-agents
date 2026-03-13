@@ -1,21 +1,11 @@
 {
   "format_id": "memo",
-  "display_name": "Internal Memo",
   "category": "internal_documents",
-  "purpose": "Support concise internal communication within the institution, typically between departments, teams, or managers and staff.",
-  "typical_use_cases": [
-    "Informing staff about internal policy updates",
-    "Requesting actions or information from internal units",
-    "Sharing brief internal guidance or status updates"
-  ],
-  "selection_hints": [
-    "The audience is internal to the institution",
-    "The document is short and informational or directive",
-    "The request mentions 'memo', 'note', or 'internal communication'"
-  ],
+  "description": "Concise internal communication within the institution, typically between departments, teams, or managers and staff.",
   "required_sections": [
     "header",
     "to_from",
+    "date",
     "subject_line",
     "background",
     "main_points"
@@ -24,56 +14,5 @@
     "actions_required",
     "timeline",
     "attachments_note"
-  ],
-  "section_order": [
-    "header",
-    "to_from",
-    "date",
-    "subject_line",
-    "background",
-    "main_points",
-    "actions_required",
-    "timeline",
-    "attachments_note"
-  ],
-  "section_definitions": {
-    "header": {
-      "purpose": "Identify the institution and unit issuing the memo.",
-      "required": true
-    },
-    "to_from": {
-      "purpose": "Indicate sender and primary recipients within the institution.",
-      "required": true
-    },
-    "date": {
-      "purpose": "Record the date of the memo.",
-      "required": true
-    },
-    "subject_line": {
-      "purpose": "Summarize the topic of the memo in a short line.",
-      "required": true
-    },
-    "background": {
-      "purpose": "Provide brief context or motivation for the memo.",
-      "required": true
-    },
-    "main_points": {
-      "purpose": "Present the key information or guidance, usually in a few concise paragraphs or bullet‑style points.",
-      "required": true
-    },
-    "actions_required": {
-      "purpose": "List any actions expected from recipients, including responsibilities.",
-      "required": false
-    },
-    "timeline": {
-      "purpose": "Indicate important dates or deadlines for any actions.",
-      "required": false
-    },
-    "attachments_note": {
-      "purpose": "List any supporting documents or references attached to the memo.",
-      "required": false
-    }
-  },
-  "planner_notes": "Use this format for short internal communications where the emphasis is on clarity of information and any required actions. Keep structure simple and focused. GILE is responsible for institutional tone and linguistic refinement."
+  ]
 }
-

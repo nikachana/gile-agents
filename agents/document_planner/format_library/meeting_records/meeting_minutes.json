@@ -1,18 +1,7 @@
 {
   "format_id": "meeting_minutes",
-  "display_name": "Meeting Minutes",
   "category": "meeting_records",
-  "purpose": "Record structured summaries of institutional meetings, including participants, agenda items, and decisions.",
-  "typical_use_cases": [
-    "Documenting internal committee or board meetings",
-    "Recording project status meetings",
-    "Capturing action items and follow‑ups from cross‑team meetings"
-  ],
-  "selection_hints": [
-    "The task refers to a 'meeting', 'minutes', or 'protocol of meeting'",
-    "The output needs participants, agenda, decisions, and action items",
-    "The request asks to document what happened in a meeting"
-  ],
+  "description": "Structured summaries of institutional meetings, including participants, agenda items, discussions, decisions, and action items.",
   "required_sections": [
     "header",
     "meeting_details",
@@ -26,61 +15,5 @@
     "background",
     "documents_reviewed",
     "next_meeting"
-  ],
-  "section_order": [
-    "header",
-    "meeting_details",
-    "participants",
-    "agenda",
-    "background",
-    "documents_reviewed",
-    "discussion_summary",
-    "decisions",
-    "action_items",
-    "next_meeting"
-  ],
-  "section_definitions": {
-    "header": {
-      "purpose": "Identify the institution, unit, and type of meeting.",
-      "required": true
-    },
-    "meeting_details": {
-      "purpose": "Record date, time, place (or online platform), and meeting chair.",
-      "required": true
-    },
-    "participants": {
-      "purpose": "List attendees and, if needed, absentees or invited guests.",
-      "required": true
-    },
-    "agenda": {
-      "purpose": "List agenda items in the order they were planned or discussed.",
-      "required": true
-    },
-    "background": {
-      "purpose": "Provide brief context on why the meeting was held.",
-      "required": false
-    },
-    "documents_reviewed": {
-      "purpose": "List key documents or reports referenced during the meeting.",
-      "required": false
-    },
-    "discussion_summary": {
-      "purpose": "Summarize key points discussed for each agenda item without full transcript.",
-      "required": true
-    },
-    "decisions": {
-      "purpose": "Record formal decisions, resolutions, or conclusions reached.",
-      "required": true
-    },
-    "action_items": {
-      "purpose": "List follow‑up tasks, responsible persons, and deadlines.",
-      "required": true
-    },
-    "next_meeting": {
-      "purpose": "Indicate if and when a next meeting is scheduled.",
-      "required": false
-    }
-  },
-  "planner_notes": "Use this format when the user needs structured minutes of a meeting. Emphasize clarity of decisions and action items. The planner should outline sections and ordering; wording and institutional tone are the responsibility of GILE."
+  ]
 }
-

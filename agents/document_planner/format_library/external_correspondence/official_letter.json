@@ -1,20 +1,10 @@
 {
   "format_id": "official_letter",
-  "display_name": "Official Letter",
   "category": "external_correspondence",
-  "purpose": "Formal correspondence between an institution and external parties, such as citizens, organizations, or other institutions.",
-  "typical_use_cases": [
-    "Responding to citizen inquiries or complaints",
-    "Communicating official positions or decisions",
-    "Requesting information from external organizations"
-  ],
-  "selection_hints": [
-    "The addressee is external to the institution",
-    "The request mentions 'official letter' or similar wording",
-    "The communication needs a formal greeting, body, and closing with signature"
-  ],
+  "description": "Formal correspondence between an institution and external parties, such as citizens, organizations, or other institutions.",
   "required_sections": [
     "header",
+    "date",
     "recipient_details",
     "subject_line",
     "opening",
@@ -26,66 +16,5 @@
     "reference_info",
     "attachments_note",
     "copy_recipients"
-  ],
-  "section_order": [
-    "header",
-    "reference_info",
-    "date",
-    "recipient_details",
-    "subject_line",
-    "opening",
-    "main_body",
-    "closing",
-    "attachments_note",
-    "copy_recipients",
-    "signature_block"
-  ],
-  "section_definitions": {
-    "header": {
-      "purpose": "Identify the issuing institution (name, logo, address, and contact details).",
-      "required": true
-    },
-    "reference_info": {
-      "purpose": "Provide reference numbers, previous correspondence references, or file identifiers.",
-      "required": false
-    },
-    "date": {
-      "purpose": "Record the date of the letter in the institutional format.",
-      "required": true
-    },
-    "recipient_details": {
-      "purpose": "Specify recipient name, role, and address or contact details.",
-      "required": true
-    },
-    "subject_line": {
-      "purpose": "State the subject of the letter concisely.",
-      "required": true
-    },
-    "opening": {
-      "purpose": "Provide formal greeting and short introduction to the context.",
-      "required": true
-    },
-    "main_body": {
-      "purpose": "Present the core message, reasoning, and any decisions or requests.",
-      "required": true
-    },
-    "closing": {
-      "purpose": "Provide a formal closing sentence and polite sign‑off.",
-      "required": true
-    },
-    "attachments_note": {
-      "purpose": "List attachments or enclosures referenced in the letter.",
-      "required": false
-    },
-    "copy_recipients": {
-      "purpose": "Indicate any additional recipients (CC) of the letter.",
-      "required": false
-    },
-    "signature_block": {
-      "purpose": "Provide the name, title, and space for signature of the authorized person.",
-      "required": true
-    }
-  },
-  "planner_notes": "Use this format when the user or router indicates a need for a formal institutional letter to an external recipient. Ensure that the plan includes clear subject, structured body, and appropriate closing, but do not generate final wording here."
+  ]
 }
-

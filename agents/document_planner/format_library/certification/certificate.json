@@ -1,18 +1,7 @@
 {
   "format_id": "certificate",
-  "display_name": "Certificate",
   "category": "certification",
-  "purpose": "Issue formal certificates confirming a fact, status, completion, or participation.",
-  "typical_use_cases": [
-    "Certifying employment or position",
-    "Confirming completion of a training or program",
-    "Issuing attendance or participation certificates"
-  ],
-  "selection_hints": [
-    "The request explicitly mentions a 'certificate' or proof of status",
-    "The output is a short, formal confirmation document",
-    "The institution needs to attest to a fact in an official form"
-  ],
+  "description": "Formal certificates confirming a fact, status, completion, or participation issued by the institution.",
   "required_sections": [
     "header",
     "title",
@@ -26,61 +15,5 @@
     "reference_info",
     "validity_period",
     "attachments_note"
-  ],
-  "section_order": [
-    "header",
-    "reference_info",
-    "title",
-    "certification_statement",
-    "subject_details",
-    "scope_and_limits",
-    "validity_period",
-    "date_and_place",
-    "attachments_note",
-    "signature_block"
-  ],
-  "section_definitions": {
-    "header": {
-      "purpose": "Identify the issuing institution and unit.",
-      "required": true
-    },
-    "reference_info": {
-      "purpose": "Provide registration or reference numbers if applicable.",
-      "required": false
-    },
-    "title": {
-      "purpose": "State the type of certificate (e.g., Employment Certificate).",
-      "required": true
-    },
-    "certification_statement": {
-      "purpose": "Formally state that the institution certifies a fact or status.",
-      "required": true
-    },
-    "subject_details": {
-      "purpose": "Describe the person or entity to whom the certificate refers.",
-      "required": true
-    },
-    "scope_and_limits": {
-      "purpose": "Explain what is and is not covered by the certificate.",
-      "required": true
-    },
-    "validity_period": {
-      "purpose": "Indicate any validity dates or conditions, if applicable.",
-      "required": false
-    },
-    "date_and_place": {
-      "purpose": "Record where and when the certificate is issued.",
-      "required": true
-    },
-    "attachments_note": {
-      "purpose": "List any annexes or supporting documents that accompany the certificate.",
-      "required": false
-    },
-    "signature_block": {
-      "purpose": "Provide the name, title, and signature line for the authorized representative.",
-      "required": true
-    }
-  },
-  "planner_notes": "Use this format when the institution must formally attest to a fact or status in a concise document. Ensure that the structure makes the certified fact, subject, and scope clear. Delegate exact phrasing and institutional tone to GILE."
+  ]
 }
-
