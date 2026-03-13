@@ -10,6 +10,8 @@ The Router Agent performs a **first‑pass interpretation** of incoming messages
 - Associated metadata (channel, role, priority, domain, etc.).
 - Optional source context (previous messages, related documents, task state).
 
+The Router may also receive **hints about desired document format** (e.g., “official letter”, “protocol”), but the **final decision and application of document formats** belongs to the **Document Planner**, not the Router.
+
 ### Likely Future Outputs
 
 - Route decision (e.g., which agent or workflow to invoke).

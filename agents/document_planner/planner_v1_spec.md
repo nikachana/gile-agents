@@ -66,6 +66,7 @@ Planner v1 returns a structured plan in JSON:
 ```json
 {
   "plan_type": "string – one of reply_structure | document_structure | plan_only",
+  "document_format": "string – optional institutional format, e.g., official_letter",
   "sections": [
     {
       "section_id": "string – stable identifier, e.g., intro, summary, actions",
@@ -83,7 +84,7 @@ Planner v1 returns a structured plan in JSON:
 }
 ```
 
-Each **section** must at least specify a `section_id` and `purpose`. Titles and additional flags are internal aids for drafting, not final text.
+Each **section** must at least specify a `section_id` and `purpose`. The optional `document_format` field allows the planner to declare formats such as `"official_letter"`, `"meeting_minutes"`, or `"protocol"`. Titles and additional flags are internal aids for drafting, not final text.
 
 ### 6. Supported Plan Types
 

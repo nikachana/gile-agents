@@ -17,6 +17,20 @@ The Document Planner determines the **structure and planning requirements** for 
 - Required elements and constraints (e.g., mandatory sections, disclaimers).
 - Drafting instructions for downstream drafting agents.
 
+## Document Formats
+
+The Document Planner is expected to recognize **institutional document formats** and use them to generate structured plans.
+Examples include:
+
+- `official_letter`
+- `meeting_minutes`
+- `protocol`
+- `memo`
+- `decree`
+- `certificate`
+
+These formats act as **structural templates** (sections, ordering, required elements). The planner selects and applies them when building plans, while **GILE** remains responsible only for **language‑level refinement** of the drafted content.
+
 ### Boundaries and Non‑Goals
 
 - **Not implemented yet** – this directory currently defines intent and contracts only; no runtime logic is present.

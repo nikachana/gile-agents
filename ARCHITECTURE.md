@@ -44,6 +44,16 @@ All reasoning, task interpretation, and workflow decisions remain in the agent l
 
 Integration principle: **every final institutional Georgian output must pass through GILE** before being returned.
 
+## Document Format Knowledge
+
+Institutional document types such as **official letters, meeting minutes, protocols, decrees, certificates, and memos** are treated as **structural formats** in this architecture.
+These formats define **layout and section structure** and are handled by the **Document Planner** in `gile-agents`.
+
+- **Document Planner (agents layer)**: chooses and applies the appropriate institutional format, defines sections, and describes the intent of each part.
+- **GILE (language layer)**: operates on the text produced according to that structure, providing translation, rewrite, refinement, terminology enforcement, retrieval, and validation.
+
+GILE is **not** responsible for choosing document formats or designing document structure; it only refines and validates the language that follows the structure defined by the agents.
+
 ## Target Flow
 
 The target high‑level flow for a message is:

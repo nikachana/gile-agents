@@ -1,0 +1,181 @@
+{
+  "version": "1.0.0",
+  "sections": [
+    {
+      "section_id": "header",
+      "category": "identity",
+      "description": "Identifies the issuing institution and, where applicable, the organizational unit."
+    },
+    {
+      "section_id": "reference_info",
+      "category": "metadata",
+      "description": "Provides reference numbers, previous correspondence identifiers, or registration data."
+    },
+    {
+      "section_id": "date",
+      "category": "metadata",
+      "description": "Records the date of issuance in the institutional format."
+    },
+    {
+      "section_id": "recipient_details",
+      "category": "parties",
+      "description": "Specifies recipient name, role, and contact or address details."
+    },
+    {
+      "section_id": "subject_line",
+      "category": "summary",
+      "description": "States the subject of the document in a concise line."
+    },
+    {
+      "section_id": "opening",
+      "category": "narrative",
+      "description": "Provides formal greeting and short introduction to the context."
+    },
+    {
+      "section_id": "main_body",
+      "category": "narrative",
+      "description": "Presents the core message, explanation, or content of the document."
+    },
+    {
+      "section_id": "closing",
+      "category": "narrative",
+      "description": "Provides a formal closing sentence and polite sign‑off."
+    },
+    {
+      "section_id": "signature_block",
+      "category": "authorization",
+      "description": "Contains the name, title, and signature space for the authorized representative."
+    },
+    {
+      "section_id": "copy_recipients",
+      "category": "distribution",
+      "description": "Lists additional recipients (CC) who receive a copy of the document."
+    },
+    {
+      "section_id": "attachments_note",
+      "category": "attachments",
+      "description": "Lists attachments, annexes, or supporting documents referenced in the document."
+    },
+    {
+      "section_id": "title",
+      "category": "summary",
+      "description": "Provides a concise title describing the nature of the document (e.g., Order, Certificate)."
+    },
+    {
+      "section_id": "preamble",
+      "category": "narrative",
+      "description": "Introduces the context and overall intent of an order, decree, or formal decision."
+    },
+    {
+      "section_id": "background",
+      "category": "context",
+      "description": "Summarizes relevant circumstances, motivations, or prior events."
+    },
+    {
+      "section_id": "legal_basis",
+      "category": "legal",
+      "description": "Lists legal or regulatory grounds authorizing the decision or document."
+    },
+    {
+      "section_id": "decision_points",
+      "category": "decision",
+      "description": "Enumerates operative provisions or decisions, usually as numbered points or articles."
+    },
+    {
+      "section_id": "effective_date",
+      "category": "metadata",
+      "description": "Indicates when an order or decision enters into force and any transition periods."
+    },
+    {
+      "section_id": "distribution_list",
+      "category": "distribution",
+      "description": "Lists internal or external recipients responsible for execution or awareness."
+    },
+    {
+      "section_id": "meeting_details",
+      "category": "meeting",
+      "description": "Records date, time, location or platform, and chair of the meeting."
+    },
+    {
+      "section_id": "participants",
+      "category": "meeting",
+      "description": "Lists attendees and, where relevant, absentees or invited guests."
+    },
+    {
+      "section_id": "agenda",
+      "category": "meeting",
+      "description": "Lists agenda items in the order they were planned or discussed."
+    },
+    {
+      "section_id": "documents_reviewed",
+      "category": "meeting",
+      "description": "Identifies key documents or reports reviewed during the meeting."
+    },
+    {
+      "section_id": "discussion_summary",
+      "category": "meeting",
+      "description": "Summarizes key discussion points per agenda item, without full transcript."
+    },
+    {
+      "section_id": "decisions",
+      "category": "decision",
+      "description": "Captures formal decisions, resolutions, or conclusions from a meeting."
+    },
+    {
+      "section_id": "action_items",
+      "category": "follow_up",
+      "description": "Lists follow‑up tasks, responsible persons, and deadlines."
+    },
+    {
+      "section_id": "next_meeting",
+      "category": "meeting",
+      "description": "Indicates whether a follow‑up meeting is planned and, if known, its timing."
+    },
+    {
+      "section_id": "certification_statement",
+      "category": "certification",
+      "description": "States that the institution formally certifies a particular fact or status."
+    },
+    {
+      "section_id": "subject_details",
+      "category": "certification",
+      "description": "Describes the person or entity to whom the certification relates."
+    },
+    {
+      "section_id": "scope_and_limits",
+      "category": "certification",
+      "description": "Clarifies what is and is not covered by the certificate."
+    },
+    {
+      "section_id": "validity_period",
+      "category": "metadata",
+      "description": "Defines any validity period or conditions attached to the document."
+    },
+    {
+      "section_id": "date_and_place",
+      "category": "metadata",
+      "description": "Records the place and date of issuance in a combined section."
+    },
+    {
+      "section_id": "to_from",
+      "category": "parties",
+      "description": "Indicates sender and primary recipients inside the institution (for memos)."
+    },
+    {
+      "section_id": "main_points",
+      "category": "narrative",
+      "description": "Presents the key information or guidance, often in concise paragraphs or bullet‑style points."
+    },
+    {
+      "section_id": "actions_required",
+      "category": "follow_up",
+      "description": "Lists specific actions requested from recipients, including responsibilities."
+    },
+    {
+      "section_id": "timeline",
+      "category": "follow_up",
+      "description": "Highlights important dates or deadlines related to required actions."
+    }
+  ]
+}
+
