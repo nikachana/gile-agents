@@ -1,0 +1,28 @@
+[
+  {
+    "format_id": "official_letter",
+    "category": "external_correspondence",
+    "path": "external_correspondence/official_letter.json"
+  },
+  {
+    "format_id": "order",
+    "category": "decisions",
+    "path": "decisions/order.json"
+  },
+  {
+    "format_id": "meeting_minutes",
+    "category": "meeting_records",
+    "path": "meeting_records/meeting_minutes.json"
+  },
+  {
+    "format_id": "certificate",
+    "category": "certification",
+    "path": "certification/certificate.json"
+  },
+  {
+    "format_id": "memo",
+    "category": "internal_documents",
+    "path": "internal_documents/memo.json"
+  }
+]
+
