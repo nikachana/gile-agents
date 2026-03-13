@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Router Agent Output (v1)",
+  "description": "Documentation-level canonical schema for Router Agent output in the gile-agents v1 pipeline. Mirrors the Router → Document Planner contract in agents/HANDOFF_CONTRACTS.md.",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "type": "string",
+      "description": "High-level workflow/category label selected by the Router.",
+      "enum": [
+        "translate",
+        "rewrite",
+        "validate",
+        "reply_draft",
+        "document_draft",
+        "document_plan",
+        "needs_clarification"
+      ]
+    },
+    "task_subtype": {
+      "type": "string",
+      "description": "Optional, more granular categorization under task_type (e.g. disciplinary_order)."
+    },
+    "route_to": {
+      "type": "string",
+      "description": "Target downstream pipeline or agent group (e.g. document_planner_v1)."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence score for the routing decision."
+    },
+    "reasoning_summary": {
+      "type": "string",
+      "description": "Short natural-language justification for the routing decision."
+    },
+    "router_version": {
+      "type": "string",
+      "description": "Identifier of the router configuration/model used."
+    },
+    "handoff_payload": {
+      "type": "object",
+      "description": "Payload forwarded to the Document Planner.",
+      "properties": {
+        "message_text": {
+          "type": "string",
+          "description": "Raw or lightly-normalized user request text."
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Non-text attributes such as channel, user role, department.",
+          "additionalProperties": true
+        },
+        "context": {
+          "type": "object",
+          "description": "Contextual artifacts such as previous messages or case IDs.",
+          "additionalProperties": true
+        },
+        "attachments": {
+          "type": "array",
+          "description": "List of attachment descriptors available to downstream agents.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string" },
+              "name": { "type": "string" }
+            },
+            "required": ["id", "type"],
+            "additionalProperties": true
+          }
+        },
+        "locale_hint": {
+          "type": "string",
+          "description": "Hint about source language or expected output locale."
+        }
+      },
+      "required": [
+        "message_text",
+        "metadata",
+        "context"
+      ],
+      "additionalProperties": true
+    },
+    "routing_alternatives": {
+      "type": "array",
+      "description": "Optional array of fallback or alternative routing hypotheses.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task_type": { "type": "string" },
+          "route_to": { "type": "string" },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": ["task_type", "route_to", "confidence"],
+        "additionalProperties": true
+      }
+    }
+  },
+  "required": [
+    "task_type",
+    "route_to",
+    "confidence",
+    "reasoning_summary",
+    "handoff_payload"
+  ],
+  "additionalProperties": true
+}
+

@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Document Planner Output (v1)",
+  "description": "Documentation-level canonical schema for Document Planner output in the gile-agents v1 pipeline. Mirrors the Document Planner → Reply Agent contract in agents/HANDOFF_CONTRACTS.md.",
+  "type": "object",
+  "properties": {
+    "intent": {
+      "type": "string",
+      "description": "Canonical institutional intent selected by the planner.",
+      "enum": [
+        "communication",
+        "decision",
+        "documentation",
+        "confirmation",
+        "analysis"
+      ]
+    },
+    "document_format": {
+      "type": "string",
+      "description": "Chosen document format type.",
+      "enum": [
+        "official_letter",
+        "order",
+        "meeting_minutes",
+        "certificate",
+        "memo"
+      ]
+    },
+    "format_variant": {
+      "type": "string",
+      "description": "Optional variant of the document format (e.g. strict_official, informal_internal)."
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence score for the plan as a whole."
+    },
+    "reasoning_summary": {
+      "type": "string",
+      "description": "Short explanation of how intent and document_format were chosen."
+    },
+    "risk_flags": {
+      "type": "array",
+      "description": "Optional flags indicating legal/compliance sensitivities.",
+      "items": { "type": "string" }
+    },
+    "sections": {
+      "type": "array",
+      "description": "Ordered description of the high-level document structure.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable identifier for the section."
+          },
+          "title": {
+            "type": "string",
+            "description": "Human-readable section title."
+          },
+          "purpose": {
+            "type": "string",
+            "description": "One-sentence description of what this section should achieve."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Indicates whether the section must appear in the draft."
+          },
+          "hints": {
+            "type": "array",
+            "description": "Optional style/content hints for the section.",
+            "items": { "type": "string" }
+          },
+          "examples": {
+            "type": "array",
+            "description": "Optional illustrative snippets for the section.",
+            "items": { "type": "string" }
+          },
+          "dependent_on_sections": {
+            "type": "array",
+            "description": "Optional list of section IDs this section depends on.",
+            "items": { "type": "string" }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "purpose",
+          "required"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "draft_instructions": {
+      "type": "object",
+      "description": "Guidance for the Reply Agent on tone, style, and constraints.",
+      "properties": {
+        "tone": {
+          "type": "string",
+          "description": "Target tone for the draft (e.g. formal_institutional)."
+        },
+        "language": {
+          "type": "string",
+          "description": "Expected drafting language before GILE (e.g. ka-GE)."
+        },
+        "constraints": {
+          "type": "array",
+          "description": "Optional list of constraints such as length limits or mandatory phrases.",
+          "items": { "type": "string" }
+        }
+      },
+      "required": [
+        "tone",
+        "language"
+      ],
+      "additionalProperties": true
+    },
+    "source_payload": {
+      "type": "object",
+      "description": "Opaque payload preserving upstream Router data and any relevant context.",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "intent",
+    "document_format",
+    "confidence",
+    "reasoning_summary",
+    "sections",
+    "draft_instructions",
+    "source_payload"
+  ],
+  "additionalProperties": true
+}
+
