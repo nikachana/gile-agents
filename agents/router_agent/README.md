@@ -2,7 +2,7 @@
 
 ### Purpose
 
-The Router Agent performs a **first‑pass interpretation** of incoming messages and routes them to the appropriate downstream workflow or agent. It focuses on **classification and routing**, not on drafting or language refinement.
+The Router Agent performs a **first‑pass workflow classification** of incoming messages and routes them to the appropriate downstream workflow or agent. It focuses on **classification and routing only** – it does **not** choose detailed document formats, plan sections, draft text, or refine Georgian language.
 
 ### Likely Future Inputs
 
@@ -26,7 +26,7 @@ Router Agent v1 is intentionally narrow in scope. It focuses on:
 - **Workflow routing** – decide which downstream agent or workflow should handle it.
 - **Handoff preparation** – assemble the minimal payload needed by the next step.
 
-It **does not** perform drafting, document planning, or any Georgian language refinement; these responsibilities belong to downstream agents and to GILE.
+It **does not** perform drafting, detailed document format selection, document planning, or any Georgian language refinement; these responsibilities belong to downstream agents (Document Planner, Reply Agent) and to GILE.
 
 ## Supported Task Types
 
