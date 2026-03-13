@@ -15,10 +15,11 @@ There is a strict separation of concerns:
 ### GILE (language layer, separate repo)
 
 **Responsible for:**
-- Translating content to institutional Georgian.
-- Rewriting and refining drafts.
+- English → Georgian institutional translation.
+- Georgian → Georgian institutional rewrite and refinement.
 - Enforcing institutional terminology and style.
-- Providing examples and performing validation of language output.
+- Retrieval and example provision for language use.
+- Editor‑style passes and validation of language output.
 
 **Must never contain:**
 - Business‑specific routing or workflow orchestration.
@@ -28,7 +29,7 @@ There is a strict separation of concerns:
 ### gile-agents (reasoning layer, this repo)
 
 **Responsible for:**
-- Interpreting incoming messages and selecting workflows.
+- Interpreting incoming messages and selecting workflows (routing).
 - Planning documents, responses, and interaction structures.
 - Producing **draft intent/content** in English or Georgian.
 - Orchestrating calls to GILE and other external systems.
@@ -48,7 +49,7 @@ Incoming message
 → **Router Agent** (selects workflow / task type)  
 → **Reasoning / Planning Agent** (e.g., Document Planner)  
 → **Draft response (EN or KA)** produced by agents  
-→ **GILE** (translation / rewrite / refinement / validation)  
+→ **GILE** (translation / rewrite / refinement / validation / terminology / retrieval / editor pass)  
 → **Institutional Georgian output** returned to the user or system
 
 In this flow:

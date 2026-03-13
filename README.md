@@ -2,14 +2,14 @@
 
 This repository contains **reasoning agents** that orchestrate and structure work, while delegating all institutional Georgian language work to the external **GILE** engine.
 
-- **GILE (external)**: translation, rewrite, refinement, terminology enforcement, examples, validation for institutional Georgian.
+- **GILE (external)**: English → Georgian institutional translation, Georgian → Georgian institutional rewrite, refinement, terminology enforcement, retrieval, editor pass, and validation.
 - **gile-agents (this repo)**: routing, planning, and drafting logic that calls GILE as a language layer.
 
 Agents in this repository:
 - interpret and route incoming messages,
 - plan documents and responses,
 - draft content (often in English, sometimes in Georgian),
-but they **never replicate GILE’s linguistic functionality**. All official Georgian output must be produced or finalized by GILE.
+but they **never replicate GILE’s linguistic functionality**. All **final Georgian output must be produced or finalized by GILE**.
 
 ### Relationship to GILE
 
@@ -20,7 +20,7 @@ GILE lives in a separate repository and is treated as **external language infras
 
 ### Current Status
 
-This repository is currently a **documentation‑first scaffold**. No runtime agent logic has been implemented yet.
+This repository is currently a **scaffold / documentation‑first** setup. No runtime agent logic has been implemented yet.
 
 ### Planned Next Steps
 
