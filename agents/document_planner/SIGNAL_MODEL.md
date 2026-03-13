@@ -99,10 +99,10 @@ These rules ensure that the strongest, most specific signals guide the final int
 
 ### Example 1 – Meeting minutes
 
-- **Request**: “გთხოვთ მოამზადოთ სხდომის ფარგლებში მიღებული გადაწყვეტილებების საფუძველზე შეხვედრის პროტოკოლი.”  
+- **Request**: “გთხოვთ მოამზადოთ სხდომის ფარგლებში მიღებული გადაწყვეტილებების საფუძველზე შეხვედრის ოქმი.”  
 - **Matched signals**:
   - Trigger: `სხდომის ფარგლებში` → documentation  
-  - Action/document verb: “შეხვედრის პროტოკოლი / meeting minutes” → documentation  
+  - Action/document noun: “შეხვედრის ოქმი / meeting minutes” → documentation  
 - **Resolved intent**: `documentation`  
 - **Selected format**: `meeting_minutes`
 
