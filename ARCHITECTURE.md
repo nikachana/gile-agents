@@ -12,6 +12,9 @@ There is a strict separation of concerns:
 
 ## Two‑Repository Responsibilities
 
+Agents should treat GILE as a stateless language engine.
+All reasoning, task interpretation, and workflow decisions remain in the agent layer.
+
 ### GILE (language layer, separate repo)
 
 **Responsible for:**
