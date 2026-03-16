@@ -23,7 +23,14 @@
     },
     "route_to": {
       "type": "string",
-      "description": "Target downstream pipeline or agent group (e.g. document_planner_v1)."
+      "description": "Target downstream pipeline or agent group.",
+      "enum": [
+        "document_planner_v1",
+        "gile_translate",
+        "gile_rewrite",
+        "gile_validate",
+        "clarification_flow"
+      ]
     },
     "confidence": {
       "type": "number",

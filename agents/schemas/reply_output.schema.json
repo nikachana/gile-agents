@@ -29,7 +29,13 @@
     },
     "gile_action": {
       "type": "string",
-      "description": "Requested refinement action when requires_gile is true (e.g. refine_language, enforce_institutional_style)."
+      "description": "Requested refinement action when requires_gile is true.",
+      "enum": [
+        "translate",
+        "rewrite",
+        "validate",
+        "institutional_rewrite"
+      ]
     },
     "style_hints": {
       "type": "array",
