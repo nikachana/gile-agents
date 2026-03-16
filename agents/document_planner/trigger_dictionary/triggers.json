@@ -27,11 +27,6 @@
       "confidence": 0.9
     },
     {
-      "trigger_phrase": "დავალდეს",
-      "intent": "decision",
-      "confidence": 0.95
-    },
-    {
       "trigger_phrase": "დაევალოს",
       "intent": "decision",
       "confidence": 0.95
