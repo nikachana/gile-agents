@@ -1,0 +1,6 @@
+# Windows device artifact files
+NUL
+runtime/NUL
+tests/NUL
+prompts/NUL
+
