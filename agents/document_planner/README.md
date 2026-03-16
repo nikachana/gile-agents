@@ -32,11 +32,16 @@ Likely inputs:
 - Source message content and conversation history.
 - Relevant domain or knowledge context (documents, policies, previous decisions).
 
-Planner configuration and knowledge:
+Planner configuration and knowledge (subsystem artifacts):
 
-- `intent_taxonomy.json` – defines institutional intent categories and their default formats.
+- `planner_v1_spec.md` – high‑level description of Planner v1 scope, responsibilities, and contracts.
+- `FORMAT_SELECTION_FLOW.md` – describes how institutional intent and context are turned into a document format decision.
+- `SIGNAL_MODEL.md` – explains how textual and contextual signals contribute to intent resolution and format selection.
+- `decision_rules.md` – documents the rule logic that combines signals into final intent and format choices.
+- `intent_taxonomy.json` – defines institutional intent categories and their allowed mappings.
 - `format_library/` – defines institutional document formats and their structural templates.
 - `section_vocabulary/` – defines reusable section identifiers and their semantics.
+- `trigger_dictionary/` – lists trigger phrases that act as evidence for particular intents or documentation needs.
 
 ### Outputs
 

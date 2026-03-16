@@ -28,6 +28,13 @@ Router Agent v1 is intentionally narrow in scope. It focuses on:
 
 It **does not** perform drafting, detailed document format selection, document planning, or any Georgian language refinement; these responsibilities belong to downstream agents (Document Planner, Reply Agent) and to GILE.
 
+Key Router v1 documentation artifacts:
+
+- `router_v1_spec.md` – describes Router v1 goals, scope, and high‑level behavior.
+- `classification_rules.md` – documents how input features and patterns are mapped to `task_type` decisions.
+- `../HANDOFF_CONTRACTS.md` – defines the canonical Router → Document Planner handoff contract in the broader agent pipeline.
+- `../schemas/router_output.schema.json` – JSON Schema describing the Router’s structured v1 output (fields, types, and enums).
+
 ## Supported Task Types
 
 Router Agent v1 is expected to classify requests into a small set of practical task types:

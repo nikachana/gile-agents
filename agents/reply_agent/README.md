@@ -16,6 +16,14 @@ The Reply Agent creates the **initial draft response** based on an existing plan
 - Draft response in **English or Georgian**, suitable for handoff to GILE.
 - Optional notes or annotations indicating where GILE should translate, rewrite, or refine.
 
+### Reply Agent v1 documentation artifacts
+
+The Reply Agent v1 is documented through the following artifacts:
+
+- `reply_v1_spec.md` – defines Reply Agent v1 scope, responsibilities, and interaction with the planner and GILE.
+- `../HANDOFF_CONTRACTS.md` – specifies the planner → reply and reply → GILE handoff contracts in the overall pipeline.
+- `../schemas/reply_output.schema.json` – JSON Schema describing the structured v1 output that GILE consumes.
+
 ### Boundaries and Non‑Goals
 
 - **Not implemented yet** – this directory currently documents intent and contracts only; no runtime logic is present.
