@@ -8,15 +8,17 @@ The Document Planner determines **institutional intent**, selects a **document f
 
 The planner:
 
-- **Selects institutional intent** using an internal taxonomy (e.g., communication, decision, documentation, confirmation, analysis).
-- **Maps intent to a document format** using the v1 formats:
+- **Detects institutional intent** using an internal taxonomy (e.g., communication, decision, documentation, confirmation, analysis).
+- **Selects document format** based on the resolved intent and context, using the v1 formats:
   - `official_letter`
   - `order`
   - `meeting_minutes`
   - `certificate`
   - `memo`
-- **Loads section structures** from the section vocabulary and format library.
-- Produces a **structured plan** (plan type, document format, ordered sections, drafting instructions) for the Reply Agent.
+- **Loads document structure** from the format library and resolves section meanings through the section vocabulary.
+- **Prepares the plan for the Reply Agent** as a structured object (intent, document format, ordered sections, drafting instructions).
+- **Does not produce final text** – it only defines structure and requirements.
+- **Does not perform Georgian refinement** – all institutional Georgian style and polishing remain GILE’s responsibility.
 
 The planner **does not**:
 
@@ -42,6 +44,8 @@ Planner configuration and knowledge (subsystem artifacts):
 - `format_library/` – defines institutional document formats and their structural templates.
 - `section_vocabulary/` – defines reusable section identifiers and their semantics.
 - `trigger_dictionary/` – lists trigger phrases that act as evidence for particular intents or documentation needs.
+- `../HANDOFF_CONTRACTS.md` – describes the canonical Router → Planner and Planner → Reply handoff contracts in the overall agent pipeline.
+- `../schemas/planner_output.schema.json` – JSON Schema for the Planner’s v1 structured output (intent, document_format, sections, draft_instructions, source_payload).
 
 ### Outputs
 

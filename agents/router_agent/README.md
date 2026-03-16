@@ -15,18 +15,23 @@ The Router may also receive **hints about desired document format** (e.g., “of
 ### Likely Future Outputs
 
 - Route decision (e.g., which agent or workflow to invoke).
-- Task type or intent classification.
+- Workflow task type classification.
 - Handoff payload containing the information required by the next agent.
 
 ## Router Agent v1 Scope
 
 Router Agent v1 is intentionally narrow in scope. It focuses on:
 
-- **First‑pass task classification** – identify what kind of request this is.
-- **Workflow routing** – decide which downstream agent or workflow should handle it.
+- **Classifying workflow type** – identify what kind of request this is (e.g., translate, reply_draft, document_draft).
+- **Routing requests** – decide which downstream agent or workflow should handle it.
 - **Handoff preparation** – assemble the minimal payload needed by the next step.
 
-It **does not** perform drafting, detailed document format selection, document planning, or any Georgian language refinement; these responsibilities belong to downstream agents (Document Planner, Reply Agent) and to GILE.
+The Router:
+
+- **Does not select document format** – that belongs to the Document Planner.
+- **Does not perform document planning** – it does not design sections or structure.
+- **Does not draft text** – it never produces user‑facing prose.
+- **Does not perform Georgian refinement** – translation and institutional style belong to GILE.
 
 Key Router v1 documentation artifacts:
 

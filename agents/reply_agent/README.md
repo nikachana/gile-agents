@@ -13,9 +13,17 @@ The Reply Agent creates the **initial draft response** based on an existing plan
 
 ### Likely Future Outputs
 
-- Draft response in **English or Georgian**, suitable for handoff to GILE.
+- Structured draft output in **English or Georgian**, suitable for handoff to GILE.
 - Optional notes or annotations indicating where GILE should translate, rewrite, or refine.
 
+### Reply Agent v1 responsibilities
+
+- **Consumes Planner output** – takes the structured plan (intent, format, sections, instructions) as its primary guide.
+- **Generates the first full draft** – produces complete draft text aligned with the planned structure.
+- **Preserves planned structure** – keeps sections and ordering defined by the Document Planner.
+- **Prepares output for GILE** – returns drafts in the shape expected by GILE for refinement.
+- **Does not invent document format** – respects the `document_format` chosen by the Planner.
+- **Does not perform final institutional Georgian refinement** – all final institutional language is produced or finalized by GILE.
 ### Reply Agent v1 documentation artifacts
 
 The Reply Agent v1 is documented through the following artifacts:
