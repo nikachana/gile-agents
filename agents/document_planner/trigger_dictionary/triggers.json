@@ -4,92 +4,128 @@
     {
       "trigger_phrase": "გთხოვთ",
       "intent": "communication",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "generic_bureaucratic",
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "გიგზავნით",
       "intent": "communication",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "intent_supporting",
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "გაცნობებთ",
       "intent": "communication",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "intent_supporting",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "წარმოგიდგენთ",
       "intent": "communication",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "intent_supporting",
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "გთხოვთ უზრუნველყოთ",
       "intent": "communication",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "intent_supporting",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "დაევალოს",
       "intent": "decision",
-      "confidence": 0.95
+      "confidence": 0.95,
+      "signal_class": "format_specific",
+      "strength": "very_strong"
     },
     {
       "trigger_phrase": "დამტკიცდეს",
       "intent": "decision",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "very_strong"
     },
     {
       "trigger_phrase": "განისაზღვროს",
       "intent": "decision",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "განხილვის შედეგად",
       "intent": "documentation",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "მონაწილეობდნენ",
       "intent": "documentation",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "დღის წესრიგი",
       "intent": "documentation",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "very_strong"
     },
     {
       "trigger_phrase": "სხდომის ფარგლებში",
       "intent": "documentation",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "ვადასტურებთ",
       "intent": "confirmation",
-      "confidence": 0.95
+      "confidence": 0.95,
+      "signal_class": "intent_supporting",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "ეძლევა ცნობა",
       "intent": "confirmation",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "very_strong"
     },
     {
       "trigger_phrase": "დასტურდება",
       "intent": "confirmation",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "format_specific",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "მოგახსენებთ",
       "intent": "analysis",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "intent_supporting",
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "აღსანიშნავია რომ",
       "intent": "analysis",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "intent_supporting",
+      "strength": "strong"
     },
     {
       "trigger_phrase": "შესაბამისად",
       "intent": "analysis",
-      "confidence": 0.9
+      "confidence": 0.9,
+      "signal_class": "generic_bureaucratic",
+      "strength": "supporting"
     }
   ]
 }
