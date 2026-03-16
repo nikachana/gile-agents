@@ -19,8 +19,8 @@
       "trigger_phrase": "გაცნობებთ",
       "intent": "communication",
       "confidence": 0.9,
-      "signal_class": "intent_supporting",
-      "strength": "strong"
+      "signal_class": "generic_bureaucratic",
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "წარმოგიდგენთ",
@@ -34,7 +34,7 @@
       "intent": "communication",
       "confidence": 0.9,
       "signal_class": "intent_supporting",
-      "strength": "strong"
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "დაევალოს",
@@ -69,7 +69,7 @@
       "intent": "documentation",
       "confidence": 0.9,
       "signal_class": "format_specific",
-      "strength": "supporting"
+      "strength": "strong"
     },
     {
       "trigger_phrase": "დღის წესრიგი",
@@ -111,14 +111,14 @@
       "intent": "analysis",
       "confidence": 0.9,
       "signal_class": "intent_supporting",
-      "strength": "supporting"
+      "strength": "strong"
     },
     {
       "trigger_phrase": "აღსანიშნავია რომ",
       "intent": "analysis",
       "confidence": 0.9,
-      "signal_class": "intent_supporting",
-      "strength": "strong"
+      "signal_class": "generic_bureaucratic",
+      "strength": "supporting"
     },
     {
       "trigger_phrase": "შესაბამისად",
