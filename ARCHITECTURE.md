@@ -44,6 +44,33 @@ All reasoning, task interpretation, and workflow decisions remain in the agent l
 
 Integration principle: **every final institutional Georgian output must pass through GILE** before being returned.
 
+At a high level, the end‑to‑end flow looks like:
+
+```text
+User Request
+   ↓
+Router Agent
+   ↓
+Document Planner
+   ↓
+Reply Agent
+   ↓
+GILE
+   ↓
+Institutional Georgian Output
+```
+
+In terms of layers:
+
+- **Reasoning layer** (`gile-agents` / `agents/`):
+  - Router Agent – workflow classification only.
+  - Document Planner – intent detection, format selection, section planning.
+  - Reply Agent – first draft generation.
+- **Language layer** (`gile`, separate repo):
+  - GILE – Georgian translation, rewrite, refinement, terminology, validation.
+- **Runtime layer** (`runtime/` in this repo):
+  - Orchestrator and adapters that execute the architecture defined in `agents/` without redefining it.
+
 ## Document Format Knowledge
 
 Institutional document types such as **official letters, meeting minutes, protocols, decrees, certificates, and memos** are treated as **structural formats** in this architecture.
@@ -69,4 +96,9 @@ In this flow:
 - Agents may reason internally in English.
 - Drafts may be in English or preliminary Georgian.
 - **Only GILE** is trusted to produce or finalize institutional Georgian text.
+
+See also:
+
+- `docs/architecture-overview.md` – repository‑level overview for new contributors.
+- `agents/HANDOFF_CONTRACTS.md` – canonical agent handoff contracts.
 
