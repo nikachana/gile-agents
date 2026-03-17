@@ -4,3 +4,4 @@ runtime/NUL
 tests/NUL
 prompts/NUL
 
+__pycache__/
