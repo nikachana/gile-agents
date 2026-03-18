@@ -79,7 +79,11 @@ def _valid_planner_output(source_payload: Dict[str, Any]) -> Dict[str, Any]:
                 "required": True,
             }
         ],
-        "draft_instructions": {"tone": "formal_professional", "language": "en"},
+        "draft_instructions": {
+            "tone": "formal_professional",
+            "language": "en",
+            "constraints": [],
+        },
         "source_payload": dict(source_payload),
     }
 

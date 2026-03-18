@@ -184,7 +184,9 @@ def run_orchestrator(
                 trace=trace,
             )
 
-        if not _validate_planner_output(planner_output):
+        try:
+            _validate_planner_output(planner_output)
+        except ValueError:
             trace.append("validation_failed_planner")
             return _build_error_response(
                 code=ERROR_INVALID_PLANNER_OUTPUT,
@@ -241,7 +243,9 @@ def run_orchestrator(
 
         steps_executed.append("validate_planner_output")
         trace.append("validate_planner_output")
-        if not _validate_planner_output(planner_output):
+        try:
+            _validate_planner_output(planner_output)
+        except ValueError:
             trace.append("validation_failed_planner")
             return _build_error_response(
                 code=ERROR_INVALID_PLANNER_OUTPUT,
@@ -458,48 +462,83 @@ def _validate_router_output(router_output: RouterOutput) -> bool:
     return True
 
 
-def _validate_planner_output(planner_output: PlannerOutput) -> bool:
+def _validate_planner_output(planner_output: dict) -> None:
     """
-    Validate Planner output against the documented Planner → Reply Agent contract.
+    Validate only the frozen minimal planner contract fragment before reply-stage use.
+
+    Frozen top-level required fields:
+    - intent
+    - sections
+    - draft_instructions
+
+    Frozen required fields inside sections[]:
+    - id
+    - title
+    - purpose
+    - required
+
+    Frozen required fields inside draft_instructions:
+    - language
+    - tone
+    - constraints
+
+    This is intentionally not a closed full-schema validation. Extra planner fields
+    remain allowed and are not rejected here.
     """
     if not isinstance(planner_output, dict):
-        return False
+        raise ValueError("Invalid planner output")
 
-    required_fields = [
-        "intent",
-        "document_format",
-        "confidence",
-        "reasoning_summary",
-        "sections",
-        "draft_instructions",
-        "source_payload",
-    ]
-    for field in required_fields:
+    for field in ("intent", "sections", "draft_instructions"):
         if field not in planner_output:
-            return False
+            raise ValueError("Invalid planner output")
+
+    intent = planner_output["intent"]
+    if not isinstance(intent, str) or not intent.strip():
+        raise ValueError("Invalid planner output")
 
     sections = planner_output["sections"]
-    if not isinstance(sections, list) or not sections:
-        return False
+    if not isinstance(sections, list):
+        raise ValueError("Invalid planner output")
 
     for section in sections:
         if not isinstance(section, dict):
-            return False
-        for field in ["id", "title", "purpose", "required"]:
+            raise ValueError("Invalid planner output")
+
+        for field in ("id", "title", "purpose", "required"):
             if field not in section:
-                return False
+                raise ValueError("Invalid planner output")
+
+        if not isinstance(section["id"], str) or not section["id"].strip():
+            raise ValueError("Invalid planner output")
+        if not isinstance(section["title"], str) or not section["title"].strip():
+            raise ValueError("Invalid planner output")
+        if not isinstance(section["purpose"], str) or not section["purpose"].strip():
+            raise ValueError("Invalid planner output")
+        if not isinstance(section["required"], bool):
+            raise ValueError("Invalid planner output")
 
     draft_instructions = planner_output["draft_instructions"]
     if not isinstance(draft_instructions, dict):
-        return False
-    for field in ["tone", "language"]:
+        raise ValueError("Invalid planner output")
+
+    for field in ("language", "tone", "constraints"):
         if field not in draft_instructions:
-            return False
+            raise ValueError("Invalid planner output")
 
-    if not isinstance(planner_output["source_payload"], dict):
-        return False
+    if (
+        not isinstance(draft_instructions["language"], str)
+        or not draft_instructions["language"].strip()
+    ):
+        raise ValueError("Invalid planner output")
 
-    return True
+    if (
+        not isinstance(draft_instructions["tone"], str)
+        or not draft_instructions["tone"].strip()
+    ):
+        raise ValueError("Invalid planner output")
+
+    if not isinstance(draft_instructions["constraints"], list):
+        raise ValueError("Invalid planner output")
 
 
 def _validate_reply_output(reply_output: ReplyOutput) -> bool:
