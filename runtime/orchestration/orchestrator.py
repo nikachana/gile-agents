@@ -7,6 +7,36 @@ RouterOutput = Dict[str, Any]
 PlannerOutput = Dict[str, Any]
 ReplyOutput = Dict[str, Any]
 
+# Frozen minimal contract surface v1: local string constants to reduce drift.
+ROUTE_DIRECT_GILE = "direct_gile"
+ROUTE_PLANNER_ONLY = "planner_only"
+ROUTE_PLANNER_REPLY = "planner_reply"
+ROUTE_PLANNER_REPLY_GILE = "planner_reply_gile"
+ROUTE_PLANNER_REPLY_FLOW = "planner_reply_flow"
+ROUTE_CLARIFICATION = "clarification"
+
+ERROR_INVALID_REQUEST = "invalid_request"
+ERROR_INVALID_ROUTER_OUTPUT = "invalid_router_output"
+ERROR_INVALID_PLANNER_OUTPUT = "invalid_planner_output"
+ERROR_INVALID_REPLY_OUTPUT = "invalid_reply_output"
+ERROR_GILE_CALL_FAILED = "gile_call_failed"
+ERROR_UNSUPPORTED_TASK_TYPE = "unsupported_task_type"
+
+# Direct-GILE task family (router handoff goes straight to GILE).
+DIRECT_GILE_TASK_TYPES = {
+    "translate",
+    "rewrite",
+    "validate",
+    "document_summarize",
+}
+
+# Planner/reply task family (router -> planner -> reply, optional GILE).
+PLANNER_REPLY_TASK_TYPES = {
+    "document_draft",
+    "reply_draft",
+    "email_draft",
+}
+
 
 def run_orchestrator(
     request: OrchestratorRequest,
@@ -18,18 +48,22 @@ def run_orchestrator(
     """
     Entry point for the orchestrator runtime.
 
-    The dependencies (router, planner, reply_agent, gile_client) are treated as
-    opaque callables that respect the documented contracts in:
-      - agents/HANDOFF_CONTRACTS.md
-      - agents/schemas/
+    Coordinates the router, planner, reply agent, and GILE client to produce a
+    structured OrchestratorResponse that includes workflow metadata and either
+    a successful final_output or an error section. The orchestrator preserves
+    existing route / error semantics and forwards GILE payloads without adding
+    any extra schema normalization layer.
     """
     steps_executed: List[str] = []
+    trace: List[str] = []
 
     # Validate request
+    trace.append("validate_request")
     steps_executed.append("validate_request")
     if not _validate_request(request):
+        trace.append("validation_failed_request")
         return _build_error_response(
-            code="invalid_request",
+            code=ERROR_INVALID_REQUEST,
             message="Request must contain 'message_text', 'metadata', and 'context'.",
             task_type=None,
             route=None,
@@ -37,14 +71,17 @@ def run_orchestrator(
             router_output=None,
             planner_output=None,
             reply_output=None,
+            trace=trace,
         )
 
     # Call Router first
     try:
+        trace.append("router_called")
         router_output = router(request)
     except Exception as exc:  # pragma: no cover - dependency behavior
+        trace.append("router_call_failed")
         return _build_error_response(
-            code="invalid_router_output",
+            code=ERROR_INVALID_ROUTER_OUTPUT,
             message=f"Router call failed: {exc}",
             task_type=None,
             route=None,
@@ -52,14 +89,17 @@ def run_orchestrator(
             router_output=None,
             planner_output=None,
             reply_output=None,
+            trace=trace,
         )
 
     steps_executed.append("router")
 
     steps_executed.append("validate_router_output")
+    trace.append("validate_router_output")
     if not _validate_router_output(router_output):
+        trace.append("validation_failed_router")
         return _build_error_response(
-            code="invalid_router_output",
+            code=ERROR_INVALID_ROUTER_OUTPUT,
             message="Router output does not match the expected contract.",
             task_type=router_output.get("task_type"),
             route=None,
@@ -67,6 +107,7 @@ def run_orchestrator(
             router_output=router_output,
             planner_output=None,
             reply_output=None,
+            trace=trace,
         )
 
     task_type: str = router_output["task_type"]
@@ -76,15 +117,21 @@ def run_orchestrator(
     reply_output: Optional[ReplyOutput] = None
     gile_result: Optional[Dict[str, Any]] = None
 
-    # Branch by task_type
-    if task_type in {"translate", "rewrite", "validate"}:
-        route_label = "direct_gile"
+    # Branch by task_type into the supported workflow categories.
+    if task_type in DIRECT_GILE_TASK_TYPES:
+        # Direct GILE flow: router handoff is validated, then sent straight to GILE.
+        route_label = ROUTE_DIRECT_GILE
         try:
+            # Validate router handoff before calling GILE.
+            _validate_direct_gile_payload(handoff_payload)
+            trace.append("direct_gile_path")
+            trace.append("gile_called")
             gile_result = gile_client(handoff_payload)
             steps_executed.append("gile")
         except Exception as exc:  # pragma: no cover - dependency behavior
+            trace.append("gile_call_failed")
             return _build_error_response(
-                code="gile_call_failed",
+                code=ERROR_GILE_CALL_FAILED,
                 message=f"GILE call failed: {exc}",
                 task_type=task_type,
                 route=route_label,
@@ -92,6 +139,7 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=None,
                 reply_output=None,
+                trace=trace,
             )
 
         final_output: Dict[str, Any] = gile_result if isinstance(gile_result, dict) else {
@@ -111,17 +159,21 @@ def run_orchestrator(
                 "reply_output": None,
             },
             "final_output": final_output,
+            "trace": list(trace),
         }
 
     if task_type == "document_plan":
-        route_label = "planner_only"
+        # Planner-only flow: planner produces a structured plan as final_output.
+        route_label = ROUTE_PLANNER_ONLY
 
         try:
+            trace.append("planner_called")
             planner_output = planner(handoff_payload)
             steps_executed.append("planner")
         except Exception as exc:  # pragma: no cover - dependency behavior
+            trace.append("planner_call_failed")
             return _build_error_response(
-                code="invalid_planner_output",
+                code=ERROR_INVALID_PLANNER_OUTPUT,
                 message=f"Planner call failed: {exc}",
                 task_type=task_type,
                 route=route_label,
@@ -129,11 +181,13 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=None,
                 reply_output=None,
+                trace=trace,
             )
 
         if not _validate_planner_output(planner_output):
+            trace.append("validation_failed_planner")
             return _build_error_response(
-                code="invalid_planner_output",
+                code=ERROR_INVALID_PLANNER_OUTPUT,
                 message="Planner output does not match the expected contract.",
                 task_type=task_type,
                 route=route_label,
@@ -141,6 +195,7 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=planner_output,
                 reply_output=None,
+                trace=trace,
             )
 
         # For document_plan workflows, the planner's structured plan is the final output.
@@ -159,18 +214,21 @@ def run_orchestrator(
                 "reply_output": None,
             },
             "final_output": final_output,
+            "trace": list(trace),
         }
 
-    if task_type in {"document_draft", "reply_draft"}:
-        # Planner
-        route_label: str = "planner_reply_flow"
+    if task_type in PLANNER_REPLY_TASK_TYPES:
+        # Planner -> reply flow, with optional GILE refinement based on requires_gile.
+        route_label: str = ROUTE_PLANNER_REPLY_FLOW
 
         try:
+            trace.append("planner_called")
             planner_output = planner(handoff_payload)
             steps_executed.append("planner")
         except Exception as exc:  # pragma: no cover - dependency behavior
+            trace.append("planner_call_failed")
             return _build_error_response(
-                code="invalid_planner_output",
+                code=ERROR_INVALID_PLANNER_OUTPUT,
                 message=f"Planner call failed: {exc}",
                 task_type=task_type,
                 route=route_label,
@@ -178,12 +236,15 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=None,
                 reply_output=None,
+                trace=trace,
             )
 
         steps_executed.append("validate_planner_output")
+        trace.append("validate_planner_output")
         if not _validate_planner_output(planner_output):
+            trace.append("validation_failed_planner")
             return _build_error_response(
-                code="invalid_planner_output",
+                code=ERROR_INVALID_PLANNER_OUTPUT,
                 message="Planner output does not match the expected contract.",
                 task_type=task_type,
                 route=route_label,
@@ -191,15 +252,18 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=planner_output,
                 reply_output=None,
+                trace=trace,
             )
 
         # Reply Agent
         try:
+            trace.append("reply_agent_called")
             reply_output = reply_agent(planner_output)
             steps_executed.append("reply")
         except Exception as exc:  # pragma: no cover - dependency behavior
+            trace.append("reply_agent_call_failed")
             return _build_error_response(
-                code="invalid_reply_output",
+                code=ERROR_INVALID_REPLY_OUTPUT,
                 message=f"Reply Agent call failed: {exc}",
                 task_type=task_type,
                 route=route_label,
@@ -207,12 +271,15 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=planner_output,
                 reply_output=None,
+                trace=trace,
             )
 
         steps_executed.append("validate_reply_output")
+        trace.append("validate_reply_output")
         if not _validate_reply_output(reply_output):
+            trace.append("validation_failed_reply")
             return _build_error_response(
-                code="invalid_reply_output",
+                code=ERROR_INVALID_REPLY_OUTPUT,
                 message="Reply output does not match the expected contract.",
                 task_type=task_type,
                 route=route_label,
@@ -220,18 +287,24 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=planner_output,
                 reply_output=reply_output,
+                trace=trace,
             )
 
         requires_gile = bool(reply_output.get("requires_gile"))
 
         if requires_gile:
-            route_label = "planner_reply_gile"
+            route_label = ROUTE_PLANNER_REPLY_GILE
             try:
+                # Validate reply output before calling GILE.
+                _validate_reply_gile_payload(reply_output)
+                trace.append("planner_reply_gile_path")
+                trace.append("gile_called")
                 gile_result = gile_client(reply_output)
                 steps_executed.append("gile")
             except Exception as exc:  # pragma: no cover - dependency behavior
+                trace.append("gile_call_failed")
                 return _build_error_response(
-                    code="gile_call_failed",
+                    code=ERROR_GILE_CALL_FAILED,
                     message=f"GILE call failed: {exc}",
                     task_type=task_type,
                     route=route_label,
@@ -239,14 +312,15 @@ def run_orchestrator(
                     router_output=router_output,
                     planner_output=planner_output,
                     reply_output=reply_output,
+                    trace=trace,
                 )
 
             final_output = gile_result if isinstance(gile_result, dict) else {
                 "text": str(gile_result)
             }
         else:
-            route_label = "planner_reply"
-            # When GILE is not required, the reply draft artifact is the final output.
+            route_label = ROUTE_PLANNER_REPLY
+            # Planner -> reply flow without GILE: reply draft becomes final_output.
             final_output = reply_output
 
         return {
@@ -262,10 +336,11 @@ def run_orchestrator(
                 "reply_output": reply_output,
             },
             "final_output": final_output,
+            "trace": list(trace),
         }
 
     if task_type == "needs_clarification":
-        route_label = "clarification"
+        route_label = ROUTE_CLARIFICATION
         # For clarification workflows, the router_output itself is treated as the clarification artifact.
         final_output = router_output
 
@@ -282,11 +357,12 @@ def run_orchestrator(
                 "reply_output": None,
             },
             "final_output": final_output,
+            "trace": list(trace),
         }
 
-    # Unsupported task_type
+    # Unsupported task_type: surface a structured error without attempting further calls.
     return _build_error_response(
-        code="unsupported_task_type",
+        code=ERROR_UNSUPPORTED_TASK_TYPE,
         message=f"Unsupported task_type: {task_type}",
         task_type=task_type,
         route=None,
@@ -294,7 +370,36 @@ def run_orchestrator(
         router_output=router_output,
         planner_output=None,
         reply_output=None,
+        trace=trace,
     )
+
+
+def _validate_direct_gile_payload(payload: Dict[str, Any]) -> None:
+    """
+    Used before direct calls to GILE (translate, rewrite, validate).
+    Required fields: "message_text", "metadata", "context".
+    Payload is expected from router_output["handoff_payload"].
+    Raises ValueError if invalid.
+    """
+    if not isinstance(payload, dict):
+        raise ValueError("Invalid GILE handoff payload (direct flow)")
+    for key in ("message_text", "metadata", "context"):
+        if key not in payload:
+            raise ValueError("Invalid GILE handoff payload (direct flow)")
+
+
+def _validate_reply_gile_payload(payload: Dict[str, Any]) -> None:
+    """
+    Used before reply-driven calls to GILE when requires_gile is True.
+    Required fields: "draft_text", "draft_language", "draft_type", "gile_action".
+    Payload is expected from reply_output.
+    Raises ValueError if invalid.
+    """
+    if not isinstance(payload, dict):
+        raise ValueError("Invalid GILE handoff payload (reply flow)")
+    for key in ("draft_text", "draft_language", "draft_type", "gile_action"):
+        if key not in payload:
+            raise ValueError("Invalid GILE handoff payload (reply flow)")
 
 
 def _validate_request(request: OrchestratorRequest) -> bool:
@@ -441,9 +546,13 @@ def _build_error_response(
     router_output: Optional[RouterOutput],
     planner_output: Optional[PlannerOutput],
     reply_output: Optional[ReplyOutput],
+    trace: List[str],
 ) -> OrchestratorResponse:
     """
     Build a structured error response aligned with ORCHESTRATOR_INTERFACE.md.
+
+    workflow.route communicates the resolved execution path (when known), and
+    error.code communicates the failure classification used by callers.
     """
     return {
         "status": "error",
@@ -462,5 +571,6 @@ def _build_error_response(
             "code": code,
             "message": message,
         },
+        "trace": list(trace),
     }
 

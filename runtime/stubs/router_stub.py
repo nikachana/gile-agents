@@ -13,20 +13,21 @@ def router(request: dict) -> dict:
     normalized_message = message_text.strip() if isinstance(message_text, str) else ""
     mode = metadata.get("mode")
 
+    # Explicit mode -> task_type mapping for supported task families.
+    _MODE_TO_TASK_TYPE = {
+        "translate": "translate",
+        "rewrite": "rewrite",
+        "validate": "validate",
+        "document_plan": "document_plan",
+        "reply_draft": "reply_draft",
+        "document_summarize": "document_summarize",
+        "email_draft": "email_draft",
+    }
+
     if not normalized_message:
         task_type = "needs_clarification"
-    elif mode == "translate":
-        task_type = "translate"
-    elif mode == "rewrite":
-        task_type = "rewrite"
-    elif mode == "validate":
-        task_type = "validate"
-    elif mode == "document_plan":
-        task_type = "document_plan"
-    elif mode == "reply_draft":
-        task_type = "reply_draft"
     else:
-        task_type = "document_draft"
+        task_type = _MODE_TO_TASK_TYPE.get(mode, "document_draft")
 
     route_to = _route_for_task_type(task_type)
 
@@ -44,13 +45,17 @@ def router(request: dict) -> dict:
 
 
 def _route_for_task_type(task_type: str) -> str:
-    if task_type in {"translate", "rewrite", "validate"}:
-        return "gile"
-    if task_type == "document_plan":
-        return "planner"
-    if task_type in {"document_draft", "reply_draft"}:
-        return "planner"
-    if task_type == "needs_clarification":
-        return "clarification"
-    return "unsupported"
+    _TASK_TO_ROUTE = {
+        "translate": "gile",
+        "rewrite": "gile",
+        "validate": "gile",
+        "document_summarize": "gile",
+        "document_plan": "planner",
+        "document_draft": "planner",
+        "reply_draft": "planner",
+        "email_draft": "planner",
+        "needs_clarification": "clarification",
+    }
+
+    return _TASK_TO_ROUTE.get(task_type, "unsupported")
 
