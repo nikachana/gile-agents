@@ -1,0 +1,24 @@
+{
+  "$id": "contracts/workflow_route.enum.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WorkflowRoute",
+  "description": "Stable workflow.route values used by the orchestrator to classify execution paths.",
+  "oneOf": [
+    {
+      "type": "string",
+      "enum": [
+        "direct_gile",
+        "planner_only",
+        "planner_reply",
+        "planner_reply_gile",
+        "planner_reply_flow",
+        "clarification"
+      ]
+    },
+    {
+      "type": "null",
+      "description": "Early-failure / no-route-resolved state before a workflow route is chosen."
+    }
+  ]
+}
+

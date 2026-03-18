@@ -264,8 +264,11 @@ def run_orchestrator(
             trace.append("reply_agent_called")
             reply_output = reply_agent(planner_output)
             steps_executed.append("reply")
+
+            trace.append("validate_reply_output")
+            _validate_reply_output(reply_output)
         except Exception as exc:  # pragma: no cover - dependency behavior
-            trace.append("reply_agent_call_failed")
+            trace.append("validation_failed_reply")
             return _build_error_response(
                 code=ERROR_INVALID_REPLY_OUTPUT,
                 message=f"Reply Agent call failed: {exc}",
@@ -275,22 +278,6 @@ def run_orchestrator(
                 router_output=router_output,
                 planner_output=planner_output,
                 reply_output=None,
-                trace=trace,
-            )
-
-        steps_executed.append("validate_reply_output")
-        trace.append("validate_reply_output")
-        if not _validate_reply_output(reply_output):
-            trace.append("validation_failed_reply")
-            return _build_error_response(
-                code=ERROR_INVALID_REPLY_OUTPUT,
-                message="Reply output does not match the expected contract.",
-                task_type=task_type,
-                route=route_label,
-                steps_executed=steps_executed,
-                router_output=router_output,
-                planner_output=planner_output,
-                reply_output=reply_output,
                 trace=trace,
             )
 
@@ -404,6 +391,33 @@ def _validate_reply_gile_payload(payload: Dict[str, Any]) -> None:
     for key in ("draft_text", "draft_language", "draft_type", "gile_action"):
         if key not in payload:
             raise ValueError("Invalid GILE handoff payload (reply flow)")
+
+
+def _validate_reply_output(reply_output: dict) -> None:
+    """
+    Validate only the frozen minimal reply contract fragment at the orchestrator boundary.
+
+    Frozen required field:
+    - requires_gile
+
+    Conditional rule:
+    - if requires_gile is True, the reply output must also satisfy the
+      reply -> GILE handoff payload requirements
+
+    This is intentionally not a closed full-schema validation. Reply-only content
+    remains otherwise unfrozen here.
+    """
+    if not isinstance(reply_output, dict):
+        raise ValueError("Invalid reply output")
+
+    if "requires_gile" not in reply_output:
+        raise ValueError("Invalid reply output")
+
+    if not isinstance(reply_output["requires_gile"], bool):
+        raise ValueError("Invalid reply output")
+
+    if reply_output["requires_gile"] is True:
+        _validate_reply_gile_payload(reply_output)
 
 
 def _validate_request(request: OrchestratorRequest) -> bool:
@@ -541,39 +555,31 @@ def _validate_planner_output(planner_output: dict) -> None:
         raise ValueError("Invalid planner output")
 
 
-def _validate_reply_output(reply_output: ReplyOutput) -> bool:
+def _validate_reply_output(reply_output: dict) -> None:
     """
-    Validate Reply Agent output against the documented Reply Agent → GILE contract.
+    Validate only the frozen minimal reply contract fragment at the orchestrator boundary.
+
+    Frozen required field:
+    - requires_gile
+
+    Conditional rule:
+    - if requires_gile is True, the reply output must also satisfy the
+      reply -> GILE handoff payload requirements
+
+    This is intentionally not a closed full-schema validation. Reply-only content
+    remains otherwise unfrozen here.
     """
     if not isinstance(reply_output, dict):
-        return False
+        raise ValueError("Invalid reply output")
 
-    required_fields = [
-        "draft_text",
-        "draft_language",
-        "draft_type",
-        "requires_gile",
-        "gile_action",
-        "source_plan",
-    ]
-    for field in required_fields:
-        if field not in reply_output:
-            return False
+    if "requires_gile" not in reply_output:
+        raise ValueError("Invalid reply output")
 
-    if not isinstance(reply_output["draft_text"], str):
-        return False
-    if not isinstance(reply_output["draft_language"], str):
-        return False
-    if not isinstance(reply_output["draft_type"], str):
-        return False
     if not isinstance(reply_output["requires_gile"], bool):
-        return False
-    if not isinstance(reply_output["gile_action"], str):
-        return False
-    if not isinstance(reply_output["source_plan"], dict):
-        return False
+        raise ValueError("Invalid reply output")
 
-    return True
+    if reply_output["requires_gile"] is True:
+        _validate_reply_gile_payload(reply_output)
 
 
 def _build_error_response(

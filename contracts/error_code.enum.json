@@ -1,0 +1,16 @@
+{
+  "$id": "contracts/error_code.enum.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ErrorCode",
+  "description": "Stable orchestrator error codes used for classification and monitoring.",
+  "type": "string",
+  "enum": [
+    "invalid_request",
+    "invalid_router_output",
+    "invalid_planner_output",
+    "invalid_reply_output",
+    "gile_call_failed",
+    "unsupported_task_type"
+  ]
+}
+

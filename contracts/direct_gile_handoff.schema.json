@@ -1,0 +1,28 @@
+{
+  "$id": "contracts/direct_gile_handoff.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DirectGILEHandoffPayload",
+  "description": "Minimal payload contract for orchestrator → GILE in direct_gile routes.",
+  "type": "object",
+  "required": [
+    "message_text",
+    "metadata",
+    "context"
+  ],
+  "properties": {
+    "message_text": {
+      "type": "string",
+      "description": "User-facing message text to be processed by GILE."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Opaque metadata object passed through unchanged."
+    },
+    "context": {
+      "type": "object",
+      "description": "Opaque context object passed through unchanged."
+    }
+  },
+  "additionalProperties": true
+}
+
