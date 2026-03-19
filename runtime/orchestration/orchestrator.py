@@ -60,7 +60,9 @@ def run_orchestrator(
     # Validate request
     trace.append("validate_request")
     steps_executed.append("validate_request")
-    if not _validate_request(request):
+    try:
+        _validate_request(request)
+    except ValueError:
         trace.append("validation_failed_request")
         return _build_error_response(
             code=ERROR_INVALID_REQUEST,
@@ -96,7 +98,9 @@ def run_orchestrator(
 
     steps_executed.append("validate_router_output")
     trace.append("validate_router_output")
-    if not _validate_router_output(router_output):
+    try:
+        _validate_router_output(router_output)
+    except ValueError:
         trace.append("validation_failed_router")
         return _build_error_response(
             code=ERROR_INVALID_ROUTER_OUTPUT,
@@ -121,10 +125,26 @@ def run_orchestrator(
     if task_type in DIRECT_GILE_TASK_TYPES:
         # Direct GILE flow: router handoff is validated, then sent straight to GILE.
         route_label = ROUTE_DIRECT_GILE
+        steps_executed.append("validate_direct_gile_payload")
+        trace.append("validate_direct_gile_payload")
         try:
-            # Validate router handoff before calling GILE.
             _validate_direct_gile_payload(handoff_payload)
-            trace.append("direct_gile_path")
+        except ValueError:
+            trace.append("validation_failed_direct_gile_payload")
+            return _build_error_response(
+                code=ERROR_INVALID_ROUTER_OUTPUT,
+                message="Router output does not match the expected contract.",
+                task_type=task_type,
+                route=route_label,
+                steps_executed=steps_executed,
+                router_output=router_output,
+                planner_output=None,
+                reply_output=None,
+                trace=trace,
+            )
+
+        trace.append("direct_gile_path")
+        try:
             trace.append("gile_called")
             gile_result = gile_client(handoff_payload)
             steps_executed.append("gile")
@@ -184,6 +204,8 @@ def run_orchestrator(
                 trace=trace,
             )
 
+        steps_executed.append("validate_planner_output")
+        trace.append("validate_planner_output")
         try:
             _validate_planner_output(planner_output)
         except ValueError:
@@ -264,14 +286,29 @@ def run_orchestrator(
             trace.append("reply_agent_called")
             reply_output = reply_agent(planner_output)
             steps_executed.append("reply")
-
-            trace.append("validate_reply_output")
-            _validate_reply_output(reply_output)
         except Exception as exc:  # pragma: no cover - dependency behavior
-            trace.append("validation_failed_reply")
+            trace.append("reply_agent_call_failed")
             return _build_error_response(
                 code=ERROR_INVALID_REPLY_OUTPUT,
                 message=f"Reply Agent call failed: {exc}",
+                task_type=task_type,
+                route=route_label,
+                steps_executed=steps_executed,
+                router_output=router_output,
+                planner_output=planner_output,
+                reply_output=None,
+                trace=trace,
+            )
+
+        steps_executed.append("validate_reply_output")
+        trace.append("validate_reply_output")
+        try:
+            _validate_reply_output(reply_output)
+        except ValueError:
+            trace.append("validation_failed_reply")
+            return _build_error_response(
+                code=ERROR_INVALID_REPLY_OUTPUT,
+                message="Reply output does not match the expected contract.",
                 task_type=task_type,
                 route=route_label,
                 steps_executed=steps_executed,
@@ -286,8 +323,6 @@ def run_orchestrator(
         if requires_gile:
             route_label = ROUTE_PLANNER_REPLY_GILE
             try:
-                # Validate reply output before calling GILE.
-                _validate_reply_gile_payload(reply_output)
                 trace.append("planner_reply_gile_path")
                 trace.append("gile_called")
                 gile_result = gile_client(reply_output)
@@ -393,59 +428,30 @@ def _validate_reply_gile_payload(payload: Dict[str, Any]) -> None:
             raise ValueError("Invalid GILE handoff payload (reply flow)")
 
 
-def _validate_reply_output(reply_output: dict) -> None:
-    """
-    Validate only the frozen minimal reply contract fragment at the orchestrator boundary.
-
-    Frozen required field:
-    - requires_gile
-
-    Conditional rule:
-    - if requires_gile is True, the reply output must also satisfy the
-      reply -> GILE handoff payload requirements
-
-    This is intentionally not a closed full-schema validation. Reply-only content
-    remains otherwise unfrozen here.
-    """
-    if not isinstance(reply_output, dict):
-        raise ValueError("Invalid reply output")
-
-    if "requires_gile" not in reply_output:
-        raise ValueError("Invalid reply output")
-
-    if not isinstance(reply_output["requires_gile"], bool):
-        raise ValueError("Invalid reply output")
-
-    if reply_output["requires_gile"] is True:
-        _validate_reply_gile_payload(reply_output)
-
-
-def _validate_request(request: OrchestratorRequest) -> bool:
+def _validate_request(request: OrchestratorRequest) -> None:
     """Validate the normalized orchestrator request shape."""
     if not isinstance(request, dict):
-        return False
+        raise ValueError("Invalid request")
 
     required_fields = ["message_text", "metadata", "context"]
     for field in required_fields:
         if field not in request:
-            return False
+            raise ValueError("Invalid request")
 
     if not isinstance(request["message_text"], str):
-        return False
+        raise ValueError("Invalid request")
     if not isinstance(request["metadata"], dict):
-        return False
+        raise ValueError("Invalid request")
     if not isinstance(request["context"], dict):
-        return False
-
-    return True
+        raise ValueError("Invalid request")
 
 
-def _validate_router_output(router_output: RouterOutput) -> bool:
+def _validate_router_output(router_output: RouterOutput) -> None:
     """
     Validate Router output against the documented Router → Planner contract.
     """
     if not isinstance(router_output, dict):
-        return False
+        raise ValueError("Invalid router output")
 
     required_fields = [
         "task_type",
@@ -456,24 +462,22 @@ def _validate_router_output(router_output: RouterOutput) -> bool:
     ]
     for field in required_fields:
         if field not in router_output:
-            return False
+            raise ValueError("Invalid router output")
 
     handoff_payload = router_output["handoff_payload"]
     if not isinstance(handoff_payload, dict):
-        return False
+        raise ValueError("Invalid router output")
 
     for field in ["message_text", "metadata", "context"]:
         if field not in handoff_payload:
-            return False
+            raise ValueError("Invalid router output")
 
     if not isinstance(handoff_payload["message_text"], str):
-        return False
+        raise ValueError("Invalid router output")
     if not isinstance(handoff_payload["metadata"], dict):
-        return False
+        raise ValueError("Invalid router output")
     if not isinstance(handoff_payload["context"], dict):
-        return False
-
-    return True
+        raise ValueError("Invalid router output")
 
 
 def _validate_planner_output(planner_output: dict) -> None:
