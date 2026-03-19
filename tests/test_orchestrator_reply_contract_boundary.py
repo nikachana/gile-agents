@@ -285,3 +285,62 @@ def test_reply_output_requires_gile_must_be_boolean():
     assert counters["reply_calls"] == 1
     assert counters["gile_calls"] == 0
 
+
+@pytest.mark.parametrize(
+    ("field_name", "invalid_value"),
+    [
+        ("draft_text", 123),
+        ("draft_language", {"lang": "en"}),
+        ("draft_type", False),
+        ("gile_action", ["rewrite"]),
+    ],
+)
+def test_reply_output_requires_gile_true_handoff_fields_must_be_strings(field_name, invalid_value):
+    request = _make_request()
+    router_output = _make_router_output()
+    planner_output = _make_valid_planner_output(router_output["handoff_payload"])
+    reply_output = {
+        "requires_gile": True,
+        "draft_text": "Draft body for GILE post-processing.",
+        "draft_language": "en",
+        "draft_type": "official_letter",
+        "gile_action": "rewrite",
+    }
+    reply_output[field_name] = invalid_value
+    counters = {
+        "planner_calls": 0,
+        "reply_calls": 0,
+        "gile_calls": 0,
+    }
+
+    def fake_router(_request):
+        return deepcopy(router_output)
+
+    def fake_planner(handoff_payload):
+        counters["planner_calls"] += 1
+        assert handoff_payload == router_output["handoff_payload"]
+        return deepcopy(planner_output)
+
+    def fake_reply_agent(*args, **kwargs):
+        counters["reply_calls"] += 1
+        return deepcopy(reply_output)
+
+    def fake_gile_client(payload):
+        counters["gile_calls"] += 1
+        return {"status": "ok", "content": "handled by gile"}
+
+    result = run_orchestrator(
+        request=request,
+        router=fake_router,
+        planner=fake_planner,
+        reply_agent=fake_reply_agent,
+        gile_client=fake_gile_client,
+    )
+
+    assert result["status"] == "error"
+    assert result["error"]["code"] == "invalid_reply_output"
+    assert result["workflow"]["route"] == "planner_reply_flow"
+    assert counters["planner_calls"] == 1
+    assert counters["reply_calls"] == 1
+    assert counters["gile_calls"] == 0
+

@@ -426,6 +426,9 @@ def _validate_reply_gile_payload(payload: Dict[str, Any]) -> None:
     for key in ("draft_text", "draft_language", "draft_type", "gile_action"):
         if key not in payload:
             raise ValueError("Invalid GILE handoff payload (reply flow)")
+    for key in ("draft_text", "draft_language", "draft_type", "gile_action"):
+        if not isinstance(payload[key], str):
+            raise ValueError("Invalid GILE handoff payload (reply flow)")
 
 
 def _validate_request(request: OrchestratorRequest) -> None:

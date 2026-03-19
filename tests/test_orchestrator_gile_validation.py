@@ -139,6 +139,16 @@ def test_direct_gile_invalid_handoff_missing_context():
     gile_client, calls = _make_gile_spy()
     result = _run_with_router(bad_router, gile_client)
 
+    assert result["status"] == "error"
+    assert result["error"]["code"] == "invalid_router_output"
+    workflow = result["workflow"]
+    assert workflow["task_type"] == "translate"
+    assert workflow["route"] is None
+    trace = result.get("trace")
+    assert isinstance(trace, list)
+    assert "validation_failed_router" in trace
+    assert calls["count"] == 0
+
 
 def test_document_summarize_invalid_handoff_missing_message_text():
     def bad_router(_request: Dict[str, Any]) -> Dict[str, Any]:
