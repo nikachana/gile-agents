@@ -1,0 +1,28 @@
+{
+    "intent": "communication",
+    "sections": [
+      {
+        "id": "intro",
+        "title": "Acknowledgement",
+        "purpose": "Acknowledge receipt of the request",
+        "required": true
+      },
+      {
+        "id": "body",
+        "title": "Status Update",
+        "purpose": "დაწერე ფორმალური, ინსტიტუციური წერილი, აცნობე რომ ნიკოლოზ ჩანადირი, ადმინისტრაციის უფროსის მოადგილე, ჯანმრთელობასთან დაკავშირებული პრობლემების გამო ვერ გამოცხადდა სამსახურში. ასევე აცნობე, რომ დანართით ვუგზავნით საავადმყოფო ფორცელს.",
+        "required": true
+      },
+      {
+        "id": "closing",
+        "title": "Formal Closing",
+        "purpose": "Close politely and professionally",
+        "required": true
+      }
+    ],
+    "draft_instructions": {
+      "language": "en",
+      "tone": "formal",
+      "constraints": []
+    }
+  }

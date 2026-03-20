@@ -1,0 +1,28 @@
+{
+    "intent": "communication",
+    "sections": [
+      {
+        "id": "intro",
+        "title": "Acknowledgement",
+        "purpose": "Acknowledge receipt of the request",
+        "required": true
+      },
+      {
+        "id": "body",
+        "title": "Status Update",
+        "purpose": "Inform the sender that the request is under review and a detailed response will follow",
+        "required": true
+      },
+      {
+        "id": "closing",
+        "title": "Formal Closing",
+        "purpose": "Close politely and professionally",
+        "required": true
+      }
+    ],
+    "draft_instructions": {
+      "language": "en",
+      "tone": "formal",
+      "constraints": []
+    }
+  }

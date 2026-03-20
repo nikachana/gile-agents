@@ -1,0 +1,51 @@
+{
+  "case_id": "case_001",
+  "scope": "prose_drafting_v1",
+  "inputs": {
+    "task_context": {
+      "message_text": "Write an official email requesting project update",
+      "metadata": {},
+      "context": {}
+    },
+    "planner_output": {
+      "intent": "communication",
+      "sections": [
+        {
+          "id": "intro",
+          "title": "Opening",
+          "purpose": "Introduce the purpose of the email",
+          "required": true
+        },
+        {
+          "id": "body",
+          "title": "Main Request",
+          "purpose": "Request a project update clearly",
+          "required": true
+        },
+        {
+          "id": "closing",
+          "title": "Closing",
+          "purpose": "Close politely and invite response",
+          "required": true
+        }
+      ],
+      "draft_instructions": {
+        "language": "en",
+        "tone": "formal",
+        "constraints": []
+      }
+    },
+    "final_prose_output": {
+      "text": "Dear Sir/Madam, I would like to request an update regarding the current status of the project. Please provide the latest information at your earliest convenience. Kind regards."
+    }
+  },
+  "evaluation_result": {
+    "dimension_ratings": {
+      "structural_compliance": "acceptable",
+      "semantic_fidelity": "acceptable",
+      "prose_quality": "acceptable"
+    },
+    "overall_result": "acceptable",
+    "provenance": "human_reviewed"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "case_id": "case_002",
+  "scope": "prose_drafting_v1",
+  "inputs": {
+    "task_context": {
+      "message_text": "Write a formal email to a project partner asking them to confirm whether they can attend a coordination meeting next Tuesday at 15:00.",
+      "metadata": {},
+      "context": {}
+    },
+    "planner_output": {
+      "intent": "communication",
+      "sections": [
+        {
+          "id": "intro",
+          "title": "Opening",
+          "purpose": "State the purpose of the message",
+          "required": true
+        },
+        {
+          "id": "body",
+          "title": "Meeting Request",
+          "purpose": "Ask the recipient to confirm attendance for the coordination meeting",
+          "required": true
+        },
+        {
+          "id": "closing",
+          "title": "Closing",
+          "purpose": "Close politely and invite a response",
+          "required": true
+        }
+      ],
+      "draft_instructions": {
+        "language": "en",
+        "tone": "formal",
+        "constraints": []
+      }
+    },
+    "final_prose_output": {
+      "text": "Dear Partner, I hope you are well. I am writing to ask whether you would be available to attend a coordination meeting next Tuesday at 15:00. Please kindly confirm your availability at your earliest convenience. Kind regards."
+    }
+  },
+  "evaluation_result": {
+    "dimension_ratings": {
+      "structural_compliance": "acceptable",
+      "semantic_fidelity": "acceptable",
+      "prose_quality": "acceptable"
+    },
+    "overall_result": "acceptable",
+    "provenance": "human_reviewed"
+  }
+}

@@ -1,0 +1,28 @@
+{
+    "intent": "communication",
+    "sections": [
+      {
+        "id": "intro",
+        "title": "Opening",
+        "purpose": "State the purpose of the message",
+        "required": true
+      },
+      {
+        "id": "body",
+        "title": "Main Information",
+        "purpose": "Inform the municipality that the planned training has been postponed and that a new date will be communicated later",
+        "required": true
+      },
+      {
+        "id": "closing",
+        "title": "Closing",
+        "purpose": "Close formally and respectfully",
+        "required": true
+      }
+    ],
+    "draft_instructions": {
+      "language": "ka",
+      "tone": "formal_institutional",
+      "constraints": []
+    }
+  }

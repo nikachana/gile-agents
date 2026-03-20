@@ -1,0 +1,28 @@
+{
+    "intent": "communication",
+    "sections": [
+      {
+        "id": "intro",
+        "title": "Opening",
+        "purpose": "Introduce the purpose of the email",
+        "required": true
+      },
+      {
+        "id": "body",
+        "title": "Main Request",
+        "purpose": "Request a project update clearly",
+        "required": true
+      },
+      {
+        "id": "closing",
+        "title": "Closing",
+        "purpose": "Close politely and invite response",
+        "required": true
+      }
+    ],
+    "draft_instructions": {
+      "language": "en",
+      "tone": "formal",
+      "constraints": []
+    }
+  }

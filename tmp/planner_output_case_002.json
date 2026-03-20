@@ -1,0 +1,28 @@
+{
+    "intent": "communication",
+    "sections": [
+      {
+        "id": "intro",
+        "title": "Opening",
+        "purpose": "State the purpose of the message",
+        "required": true
+      },
+      {
+        "id": "body",
+        "title": "Meeting Request",
+        "purpose": "Ask the recipient to confirm attendance for the coordination meeting",
+        "required": true
+      },
+      {
+        "id": "closing",
+        "title": "Closing",
+        "purpose": "Close politely and invite a response",
+        "required": true
+      }
+    ],
+    "draft_instructions": {
+      "language": "en",
+      "tone": "formal",
+      "constraints": []
+    }
+  }

@@ -1,0 +1,28 @@
+{
+    "intent": "communication",
+    "sections": [
+      {
+        "id": "intro",
+        "title": "Opening",
+        "purpose": "Start formally",
+        "required": true
+      },
+      {
+        "id": "body",
+        "title": "Main",
+        "purpose": "Provide info",
+        "required": true
+      },
+      {
+        "id": "closing",
+        "title": "Closing",
+        "purpose": "Close formally",
+        "required": true
+      }
+    ],
+    "draft_instructions": {
+      "language": "ka",
+      "tone": "formal",
+      "constraints": []
+    }
+  }

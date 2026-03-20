@@ -1,0 +1,51 @@
+{
+  "case_id": "case_007",
+  "scope": "prose_drafting_v1",
+  "inputs": {
+    "task_context": {
+      "message_text": "\u10d3\u10d0\u10ec\u10d4\u10e0\u10d4 \u10dd\u10e4\u10d8\u10ea\u10d8\u10d0\u10da\u10e3\u10e0\u10d8 \u10ec\u10d4\u10e0\u10d8\u10da\u10d8, \u10e1\u10d0\u10d3\u10d0\u10ea \u10d0\u10ea\u10dc\u10dd\u10d1\u10d4\u10d1 \u10e0\u10dd\u10db \u10e8\u10d4\u10ee\u10d5\u10d4\u10d3\u10e0\u10d0 \u10d2\u10d0\u10d3\u10d0\u10d8\u10d3\u10dd \u10d3\u10d0 \u10d0\u10ee\u10d0\u10da\u10d8 \u10d3\u10e0\u10dd \u10db\u10dd\u10d2\u10d5\u10d8\u10d0\u10dc\u10d4\u10d1\u10d8\u10d7 \u10d4\u10ea\u10dc\u10dd\u10d1\u10d4\u10d1\u10d0\u10d7.",
+      "metadata": {},
+      "context": {}
+    },
+    "planner_output": {
+      "intent": "communication",
+      "sections": [
+        {
+          "id": "intro",
+          "title": "Opening",
+          "purpose": "State the purpose",
+          "required": true
+        },
+        {
+          "id": "body",
+          "title": "Main",
+          "purpose": "Inform about postponement and future update",
+          "required": true
+        },
+        {
+          "id": "closing",
+          "title": "Closing",
+          "purpose": "Close formally",
+          "required": true
+        }
+      ],
+      "draft_instructions": {
+        "language": "ka",
+        "tone": "formal",
+        "constraints": []
+      }
+    },
+    "final_prose_output": {
+      "text": "\u10db\u10dd\u10d2\u10d4\u10e1\u10d0\u10da\u10db\u10d4\u10d1\u10d8\u10d7, \u10d2\u10d0\u10e2\u10e7\u10dd\u10d1\u10d8\u10dc\u10d4\u10d1\u10d7, \u10e0\u10dd\u10db \u10e8\u10d4\u10ee\u10d5\u10d4\u10d3\u10e0\u10d0 \u10ec\u10d0\u10e0\u10db\u10d0\u10e2\u10d4\u10d1\u10d8\u10d7 \u10e9\u10d0\u10e2\u10d0\u10e0\u10d3\u10d0 \u10d3\u10d0 \u10e7\u10d5\u10d4\u10da\u10d0\u10e4\u10d4\u10e0\u10d8 \u10d2\u10d4\u10d2\u10db\u10d8\u10e1 \u10db\u10d8\u10ee\u10d4\u10d3\u10d5\u10d8\u10d7 \u10d2\u10d0\u10dc\u10ee\u10dd\u10e0\u10ea\u10d8\u10d4\u10da\u10d3\u10d0. \u10db\u10d0\u10d3\u10da\u10dd\u10d1\u10d0 \u10d7\u10d0\u10dc\u10d0\u10db\u10e8\u10e0\u10dd\u10db\u10da\u10dd\u10d1\u10d8\u10e1\u10d7\u10d5\u10d8\u10e1."
+    }
+  },
+  "evaluation_result": {
+    "dimension_ratings": {
+      "structural_compliance": "acceptable",
+      "semantic_fidelity": "failed",
+      "prose_quality": "acceptable"
+    },
+    "overall_result": "unacceptable",
+    "provenance": "human_reviewed"
+  }
+}

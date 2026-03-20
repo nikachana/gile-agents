@@ -1,0 +1,51 @@
+{
+  "case_id": "case_003",
+  "scope": "prose_drafting_v1",
+  "inputs": {
+    "task_context": {
+      "message_text": "Write a formal institutional reply informing the sender that their request has been received and is currently under review, and that a detailed response will be provided within five working days.",
+      "metadata": {},
+      "context": {}
+    },
+    "planner_output": {
+      "intent": "communication",
+      "sections": [
+        {
+          "id": "intro",
+          "title": "Acknowledgement",
+          "purpose": "Acknowledge receipt of the request",
+          "required": true
+        },
+        {
+          "id": "body",
+          "title": "Status Update",
+          "purpose": "Inform the sender that the request is under review and a detailed response will follow",
+          "required": true
+        },
+        {
+          "id": "closing",
+          "title": "Formal Closing",
+          "purpose": "Close politely and professionally",
+          "required": true
+        }
+      ],
+      "draft_instructions": {
+        "language": "en",
+        "tone": "formal",
+        "constraints": []
+      }
+    },
+    "final_prose_output": {
+      "text": "Dear Sir/Madam, Thank you for your message. Please be informed that your request has been received and is currently under review. A detailed response will be provided within five working days. Kind regards."
+    }
+  },
+  "evaluation_result": {
+    "dimension_ratings": {
+      "structural_compliance": "acceptable",
+      "semantic_fidelity": "acceptable",
+      "prose_quality": "acceptable"
+    },
+    "overall_result": "acceptable",
+    "provenance": "human_reviewed"
+  }
+}

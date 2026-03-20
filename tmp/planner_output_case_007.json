@@ -1,0 +1,28 @@
+{
+    "intent": "communication",
+    "sections": [
+      {
+        "id": "intro",
+        "title": "Opening",
+        "purpose": "State the purpose",
+        "required": true
+      },
+      {
+        "id": "body",
+        "title": "Main",
+        "purpose": "Inform about postponement and future update",
+        "required": true
+      },
+      {
+        "id": "closing",
+        "title": "Closing",
+        "purpose": "Close formally",
+        "required": true
+      }
+    ],
+    "draft_instructions": {
+      "language": "ka",
+      "tone": "formal",
+      "constraints": []
+    }
+  }
