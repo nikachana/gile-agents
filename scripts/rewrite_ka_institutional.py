@@ -24,37 +24,39 @@ from typing import Callable
 # Prompts
 # ---------------------------------------------------------------------------
 
-SYSTEM_PROMPT = (
-    "You rewrite Georgian text into clean, natural, formal institutional Georgian.\n\n"
-    "Your job is to improve wording, clarity, tone, and administrative naturalness "
-    "while preserving meaning exactly.\n\n"
-    "STRICT MODE — apply minimal edits only, but actively perform low-risk improvements.\n"
-    "- Strongly prefer word-order cleanup, punctuation fixes, and obvious "
-    "redundancy removal before any lexical substitution.\n"
-    "- Do not replace core nouns unless the original is clearly wrong.\n"
-    "- Do not change grammatical voice (active must stay active, passive must stay passive).\n"
-    "- Do not modify verb forms unless you are fully certain the new form is correct; "
-    "when uncertain, keep the original verb form exactly.\n"
-    "- Do not replace distinct state words "
-    "(e.g. 'გადაიდო' (postponed) must not become 'შეჩერდა' (paused)).\n"
-    "- Do not add facts, conditions, timelines, or obligations not present in the input.\n"
-    "- If the text can be improved safely, improve it with minimal edits.\n"
-    "- If uncertain, keep the original wording.\n"
-    "- If the text is already clean and correct, return it unchanged.\n"
-    "- Output only the rewritten Georgian text.\n\n"
-    "Example A:\n"
-    "  Input: 'როგორც მთხოვეთ, მოთხოვნა გავაგზავნე ფოსტით და ადრესატი "
-    "დოკუმენტებს ერთ კვირაში მიიღებს.'\n"
-    "  Preferred rewrite: 'როგორც მთხოვეთ, მოთხოვნა ფოსტით გავაგზავნე და "
-    "ადრესატი დოკუმენტებს ერთ კვირაში მიიღებს.'\n\n"
-    "Example B:\n"
-    "  Input: 'როგორც ტელეფონით შევთანხმდით ამ წერილით გიგზავნით 2025 წლის "
-    "ანგარიშს და აუდიტის დასკვნას.'\n"
-    "  Preferred rewrite: 'როგორც ტელეფონით შევთანხმდით, გიგზავნით 2025 წლის "
-    "ანგარიშსა და აუდიტის დასკვნას.'\n\n"
-    "Bad rewrite: changing 'მოთხოვნა' to 'დოკუმენტები', or writing "
-    "'გავგზავნე' instead of 'გავაგზავნე'."
+REWRITE_SYSTEM_PROMPT = (
+    "You rewrite Georgian text into cleaner institutional Georgian.\n\n"
+    "First-pass goal:\n"
+    "- improve clarity\n"
+    "- fix grammar\n"
+    "- allow light restructuring\n\n"
+    "Hard constraints:\n"
+    "- preserve meaning exactly\n"
+    "- do not introduce new information\n"
+    "- do not change decision status, reason, timeline, conditions, or obligations\n"
+    "- do not replace core nouns unless strictly necessary\n"
+    "- preserve grammatical voice\n"
+    "- do not change verb forms unless certainty is high; if uncertain keep original wording\n"
+    "- output only rewritten Georgian text"
 )
+
+EDITOR_SYSTEM_PROMPT = (
+    "You are an institutional Georgian editor for second-pass cleanup.\n\n"
+    "Second-pass goal:\n"
+    "- enforce formal institutional tone\n"
+    "- remove redundancy\n"
+    "- ensure no semantic drift\n"
+    "- ensure no grammar errors\n\n"
+    "Hard constraints:\n"
+    "- preserve meaning exactly\n"
+    "- do not introduce new information\n"
+    "- do not change decision status, reason, timeline, conditions, or obligations\n"
+    "- preserve core nouns, voice, and verb intent; if uncertain keep original wording\n"
+    "- output only final Georgian text"
+)
+
+# Backward-compatible aggregate prompt constant for prompt-contract tests.
+SYSTEM_PROMPT = f"{REWRITE_SYSTEM_PROMPT}\n\n{EDITOR_SYSTEM_PROMPT}"
 
 USER_PROMPT_TEMPLATE = """Rewrite the following text into stronger institutional Georgian.
 
@@ -67,6 +69,16 @@ Requirements:
 
 Text:
 {input_text}
+"""
+
+EDITOR_PROMPT_TEMPLATE = """Original text:
+{original_text}
+
+First-pass rewrite:
+{rewritten_text}
+
+Finalize the first-pass rewrite under the second-pass rules.
+Return only the final Georgian text.
 """
 
 # ---------------------------------------------------------------------------
@@ -109,9 +121,26 @@ def _backend_openai(prompt_system: str, prompt_user: str) -> str:
     return response.choices[0].message.content.strip()
 
 
+def _run_two_pass_openai(input_text: str) -> str:
+    first_pass = _backend_openai(
+        REWRITE_SYSTEM_PROMPT,
+        USER_PROMPT_TEMPLATE.format(input_text=input_text),
+    )
+    second_pass = _backend_openai(
+        EDITOR_SYSTEM_PROMPT,
+        EDITOR_PROMPT_TEMPLATE.format(
+            original_text=input_text,
+            rewritten_text=first_pass,
+        ),
+    )
+    return second_pass.strip()
+
+
 _BACKENDS: dict[str, LLMCallable] = {
     "stub": _backend_stub,
-    "openai": _backend_openai,
+    "openai": lambda _sys, user_prompt: _run_two_pass_openai(
+        user_prompt.split("Text:\n", 1)[-1].strip()
+    ),
 }
 
 
@@ -148,7 +177,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     rewritten = get_backend()(
-        SYSTEM_PROMPT,
+        REWRITE_SYSTEM_PROMPT,
         USER_PROMPT_TEMPLATE.format(input_text=input_text),
     )
     sys.stdout.buffer.write((rewritten + "\n").encode("utf-8"))
