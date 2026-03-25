@@ -42,7 +42,7 @@
   "evaluation_result": {
     "dimension_ratings": {
       "structural_compliance": "strong",
-      "semantic_fidelity": "strong",
+      "semantic_fidelity": "acceptable",
       "prose_quality": "strong"
     },
     "overall_result": "acceptable",
