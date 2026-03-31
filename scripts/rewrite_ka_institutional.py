@@ -55,10 +55,6 @@ REWRITE_SYSTEM_PROMPT = (
     "- preserve meaning exactly\n"
     "- do not introduce new information\n"
     "- do not change decision status, reason, timeline, conditions, or obligations\n"
-    "- do not remove reference qualifiers or attribution phrases such as "
-    "'თქვენს მიერ აღნიშნული', 'მითითებული', 'ზემოაღნიშნული', and similar "
-    "context-defining elements unless clearly redundant and meaning is unchanged\n"
-    "- do not replace core nouns unless strictly necessary\n"
     "- preserve grammatical voice (active/passive)\n"
     "- do not convert active constructions into passive or document-based forms\n"
     "- You MUST correct clearly incorrect grammatical forms (including verb forms, "
@@ -84,6 +80,45 @@ REWRITE_SYSTEM_PROMPT = (
     "ანგარიშსა და აუდიტის დასკვნას'"
 )
 
+REWRITE_SYSTEM_PROMPT_MINIMAL = (
+    "You rewrite Georgian institutional/legal text in SENSITIVE MINIMAL CORRECTION mode.\n\n"
+    "You MUST apply these safe corrections when present:\n"
+    "- obvious spelling mistakes\n"
+    "- punctuation errors (commas, spacing)\n"
+    "- obvious grammatical errors\n"
+    "- broken inflection/case forms\n\n"
+    "You MUST NOT:\n"
+    "- split sentences\n"
+    "- add explanatory insertions\n"
+    "- simplify terminology\n"
+    "- replace role/term descriptions\n"
+    "- rewrite for readability\n\n"
+    "Required behavior:\n"
+    "- preserve structure and meaning\n"
+    "- preserve legal/procedural precision\n"
+    "- preserve original terminology and role descriptions exactly\n"
+    "- if text contains clear errors, fix them (do not return unchanged text)\n"
+    "- do not add any new sentence\n\n"
+    "Example (sensitive legal text):\n"
+    "Input:\n"
+    "საქართველოს მთავრობიას 2015 წლის 20 აპრილი №169 დადგენილებით დამტკიცებული "
+    "„C ჰეპატიტის მართვის სახელმწიფო პროგრამის“ ფარგლებში, 2022 წლის 29 აგვისტოს "
+    "იგეგმბა ჯანმრთელობის დაცვის სახელმწიფო პროგრამების ორგანიზაციული უზრუნველყოფის, "
+    "მონიტორინგის, სამკურნალო და სამედიცინო საშუალებების ადმინისტრირების დეპარტამენტის, "
+    "სამკურნალო და სამედიცინო საშუალებების ადმინისტრირების ხელშეკრულებით დასაქმებული პირის "
+    "ლელა ვაშაყმაძის მივლინება ,,C” გეპატიტის მკურნალობაში ჩართული პაციენტებისათვის "
+    "განკუთვნებულ მედიკამენტების ტრანსპორტირების მიზნით ქ. გორში, ქ. ხაშურში, ქ. ქუთაისში, "
+    "ქ. სენაკში, ქ. ზუგდიდში და ქ. ბათუმში.\n\n"
+    "გთხოვთ, დაავალოდებულოთ ადმინისტრაციულ დეპარტამენტს მივლინების გააფორმოს და "
+    "ტრანსპორტირებით უზრუნველყოფა.\n\n"
+    "Preferred behavior:\n"
+    "- fix only clearly broken forms\n"
+    "- preserve the long sentence structure\n"
+    "- preserve 'ხელშეკრულებით დასაქმებული პირი'\n"
+    "- do not add any new sentence\n\n"
+    "Output only rewritten Georgian text."
+)
+
 EDITOR_SYSTEM_PROMPT = (
     "You are an institutional Georgian editor for second-pass cleanup.\n\n"
     "Second-pass goal:\n"
@@ -106,9 +141,13 @@ EDITOR_SYSTEM_PROMPT = (
     "- preserve meaning exactly\n"
     "- do not introduce new information\n"
     "- do not change decision status, reason, timeline, conditions, or obligations\n"
+    "- preserve legal terminology, role definitions, employment types, and procedural descriptors\n"
+    "- do not simplify or generalize legal or institutional terms\n"
     "- do not remove reference qualifiers or attribution phrases such as "
     "'თქვენს მიერ აღნიშნული', 'მითითებული', 'ზემოაღნიშნული', and similar "
     "context-defining elements unless clearly redundant and meaning is unchanged\n"
+    "- avoid restructuring sentences that contain legal or procedural content\n"
+    "- never remove information\n"
     "- preserve grammatical voice (active/passive)\n"
     "- do not convert active constructions into passive or document-based forms\n"
     "- preserve core nouns, voice, and verb intent; if uncertain keep original wording\n"
@@ -327,15 +366,98 @@ def _safe_pass2_output(original: str, candidate: str) -> bool:
     return True
 
 
+def is_sensitive_institutional_text(text: str) -> bool:
+    markers = [
+        "საქართველოს",
+        "მუხლი",
+        "დადგენილებით",
+        "ბრძანების",
+        "შესაბამისად",
+        "ხელშეკრულებით დასაქმებული პირი",
+    ]
+    if any(m in text for m in markers):
+        return True
+
+    # Simple heuristic for long legal/administrative noun chains.
+    if len(text) > 350 and text.count(",") >= 5:
+        return True
+
+    return False
+
+
+def _violates_institutional_constraints(original: str, candidate: str) -> bool:
+    original_norm = re.sub(r"\s+", " ", original).strip()
+    candidate_norm = re.sub(r"\s+", " ", candidate).strip()
+
+    # Required deterministic checks
+    if "ხელშეკრულებით დასაქმებული პირი" in original_norm and "ხელშეკრულებით დასაქმებული პირი" not in candidate_norm:
+        _dprint("PASS2 rejected: critical term loss")
+        return True
+    if "მისი მიზანია" in candidate_norm and "მისი მიზანია" not in original_norm:
+        _dprint("PASS2 rejected: forbidden phrase insertion")
+        return True
+
+    # A) Forbidden explanatory phrase inserted
+    forbidden_insertions = [
+        "მისი მიზანია",
+        "ამ პროცესის მიზანია",
+    ]
+    for phrase in forbidden_insertions:
+        if phrase in candidate_norm and phrase not in original_norm:
+            if phrase == "მისი მიზანია":
+                _dprint("PASS2 rejected: forbidden phrase insertion")
+            return True
+
+    # B) Critical term loss
+    critical_terms = [
+        "ხელშეკრულებით დასაქმებული პირი",
+        "შრომითი ხელშეკრულებით დასაქმებული პირი",
+        "უტყუარობა",
+        "თქვენს მიერ აღნიშნული",
+        "მითითებული",
+        "ზემოაღნიშნული",
+    ]
+    for term in critical_terms:
+        if term in original_norm and term not in candidate_norm:
+            if term == "ხელშეკრულებით დასაქმებული პირი":
+                _dprint("PASS2 rejected: critical term loss")
+            return True
+
+    # C) Sentence count expansion on legal/procedural text
+    legal_markers = [
+        "საქართველოს",
+        "მუხლი",
+        "დადგენილებით",
+        "ბრძანების",
+        "შესაბამისად",
+    ]
+    if any(marker in original_norm for marker in legal_markers):
+        orig_count = len(re.findall(r"[.!?]", original))
+        cand_count = len(re.findall(r"[.!?]", candidate))
+        if cand_count > orig_count:
+            return True
+
+    return False
+
+
 def _run_two_pass_openai(input_text: str) -> str:
     _dprint("DEBUG: running PASS1")
+    sensitive = is_sensitive_institutional_text(input_text)
+    pass1_prompt = REWRITE_SYSTEM_PROMPT_MINIMAL if sensitive else REWRITE_SYSTEM_PROMPT
+    if sensitive:
+        _dprint("DEBUG: sensitive text detected")
+        _dprint("DEBUG: PASS1 using MINIMAL CORRECTION mode")
     first_pass = _backend_openai(
-        REWRITE_SYSTEM_PROMPT,
+        pass1_prompt,
         USER_PROMPT_TEMPLATE.format(input_text=input_text),
     )
     _dprint("DEBUG: PASS1 OUTPUT START")
     _dprint(first_pass)
     _dprint("DEBUG: PASS1 OUTPUT END")
+
+    if sensitive:
+        _dprint("DEBUG: skipping PASS2 for sensitive text")
+        return first_pass.strip()
 
     _dprint("DEBUG: running PASS2")
     second_pass = _backend_openai(
@@ -350,8 +472,12 @@ def _run_two_pass_openai(input_text: str) -> str:
     _dprint("DEBUG: PASS2 OUTPUT END")
 
     second_pass = second_pass.strip()
-    if _safe_pass2_output(input_text, second_pass):
+    pass2_safe = _safe_pass2_output(input_text, second_pass)
+    pass2_violates = _violates_institutional_constraints(input_text, second_pass)
+    if pass2_safe and not pass2_violates:
         return second_pass
+    if pass2_violates:
+        _dprint("DEBUG: PASS2 rejected by institutional guardrail; falling back to PASS1")
     if _safe_pass2_output(input_text, first_pass.strip()):
         return first_pass.strip()
     return input_text.strip()
