@@ -32,6 +32,16 @@ REWRITE_SYSTEM_PROMPT = (
     "- improve clarity\n"
     "- fix grammar\n"
     "- allow light restructuring\n\n"
+    "CRITICAL PRESERVATION RULES (HIGHEST PRIORITY):\n"
+    "- Preserve institutional reference language and formal register.\n"
+    "- Do NOT simplify formal reference terms into more casual equivalents.\n"
+    "- Do NOT replace 'აღნიშნული' with 'ეს'.\n"
+    "- Do NOT replace 'აღნიშნულ' with 'ამ'.\n"
+    "- Do NOT replace 'აღნიშნულ საკითხთან დაკავშირებით' with 'ამ საკითხზე'.\n"
+    "- Do NOT replace 'თქვენს მიერ' with 'თქვენი'.\n"
+    "- Do NOT replace 'მოგახსენებთ' with 'გაცნობებთ', unless the source form is clearly wrong or ungrammatical.\n"
+    "- If two versions are both grammatically correct, prefer the version closer to the original formal institutional wording.\n"
+    "- In institutional/legal text, exact register preservation is more important than naturalness.\n\n"
     "You SHOULD fix (SAFE and required when present):\n"
     "- missing punctuation (commas, spacing)\n"
     "- unnatural word order\n"
@@ -43,11 +53,12 @@ REWRITE_SYSTEM_PROMPT = (
     "If the input contains obvious grammatical or lexical corruption, do not preserve it literally.\n"
     "Repair it into the closest clear institutional Georgian form without adding new information.\n\n"
     "Style preference (without changing meaning):\n"
-    "- prefer clearer, more standard institutional Georgian over heavier administrative phrasing\n"
-    "- if two versions preserve meaning equally, choose the simpler and more natural one\n"
+    "- improve clarity only when meaning, structure, and formal institutional register remain unchanged\n"
+    "- do not simplify formal phrasing merely to sound more natural\n"
+    "- if two versions preserve meaning equally, prefer the one closer to the original institutional wording\n"
     "- prioritize correct Georgian inflection and morphology\n"
     "- ensure noun/adjective case agreement is correct\n"
-    "- prefer natural administrative phrasing over literal or awkward constructions\n"
+    "- do not modernize or casualize institutional reference language\n"
     "- discourage vague bureaucratic fillers unless truly necessary, including:\n"
     "  - 'აღნიშნულთან დაკავშირებით'\n"
     "  - 'წინამდებარე'\n"
@@ -83,7 +94,19 @@ REWRITE_SYSTEM_PROMPT = (
     "  Input: 'როგორც ტელეფონით შევთანხმდით ამ წერილით გიგზავნით 2025 წლის "
     "ანგარიშს და აუდიტის დასკვნას'\n"
     "  Preferred: 'როგორც ტელეფონით შევთანხმდით, გიგზავნით 2025 წლის "
-    "ანგარიშსა და აუდიტის დასკვნას'"
+    "ანგარიშსა და აუდიტის დასკვნას'\n\n"
+    "  Input: 'აღნიშნული საკითხი ჩვენს კომპეტენციას არ განეკუთვნება.'\n"
+    "  Preferred: keep 'აღნიშნული საკითხი'\n"
+    "  Forbidden: 'ეს საკითხი ჩვენს კომპეტენციას არ განეკუთვნება.'\n\n"
+    "  Input: 'გთხოვთ, გვაცნობოთ თქვენი პოზიცია აღნიშნულ საკითხთან დაკავშირებით...'\n"
+    "  Preferred: keep 'აღნიშნულ საკითხთან დაკავშირებით'\n"
+    "  Forbidden: 'გთხოვთ, გვაცნობოთ თქვენი პოზიცია ამ საკითხზე...'\n\n"
+    "  Input: 'მოგახსენებთ, რომ წარმოდგენილი ინფორმაცია არ არის სრულყოფილი...'\n"
+    "  Preferred: keep 'მოგახსენებთ' unless correction is required by grammar\n"
+    "  Forbidden: replacing with 'გაცნობებთ' just for style\n\n"
+    "  Input: 'გაცნობებთ, რომ თქვენი მიერ წარმოდგენილი ინფორმაცია...'\n"
+    "  Preferred: keep 'თქვენი მიერ'\n"
+    "  Forbidden: 'თქვენი წარმოდგენილი ინფორმაცია...'"
 )
 
 REWRITE_SYSTEM_PROMPT_MINIMAL = (
@@ -100,6 +123,15 @@ REWRITE_SYSTEM_PROMPT_MINIMAL = (
     "- replace role/term descriptions\n"
     "- rewrite for readability\n\n"
     "You MAY apply minimal clarity improvements only if they do not alter meaning, sentence boundaries, terminology, or structure.\n\n"
+    "CRITICAL PRESERVATION RULES (ABSOLUTE):\n"
+    "- You MUST preserve formal reference phrases exactly unless they are grammatically broken.\n"
+    "- You MUST NOT simplify institutional/legal register for readability or naturalness.\n"
+    "- Preserve address formulas, reference qualifiers, and attribution phrases.\n"
+    "- You MUST NOT replace 'აღნიშნული' with 'ეს'.\n"
+    "- You MUST NOT replace 'აღნიშნულ' with 'ამ'.\n"
+    "- You MUST NOT replace 'აღნიშნულ საკითხთან დაკავშირებით' with 'ამ საკითხზე'.\n"
+    "- You MUST NOT replace 'თქვენს მიერ' with 'თქვენი'.\n"
+    "- You MUST NOT replace 'მოგახსენებთ' with 'გაცნობებთ', unless the source form is clearly wrong or ungrammatical.\n\n"
     "Required behavior:\n"
     "- preserve structure and meaning\n"
     "- preserve legal/procedural precision\n"
@@ -132,6 +164,19 @@ REWRITE_SYSTEM_PROMPT_MINIMAL = (
     "Preferred:\n"
     "გაცნობებთ, რომ თქვენი საქმის განხილვის პროცესი დაწყებულია. "
     "გთხოვთ, უმოკლეს დროში წარმოადგინოთ დამატებითი საბუთები.\n\n"
+    "Register preservation examples:\n"
+    "Input: 'აღნიშნული საკითხი ჩვენს კომპეტენციას არ განეკუთვნება.'\n"
+    "Preferred: keep 'აღნიშნული საკითხი'\n"
+    "Forbidden: 'ეს საკითხი ჩვენს კომპეტენციას არ განეკუთვნება.'\n\n"
+    "Input: 'გთხოვთ, გვაცნობოთ თქვენი პოზიცია აღნიშნულ საკითხთან დაკავშირებით...'\n"
+    "Preferred: keep 'აღნიშნულ საკითხთან დაკავშირებით'\n"
+    "Forbidden: 'გთხოვთ, გვაცნობოთ თქვენი პოზიცია ამ საკითხზე...'\n\n"
+    "Input: 'მოგახსენებთ, რომ წარმოდგენილი ინფორმაცია არ არის სრულყოფილი...'\n"
+    "Preferred: keep 'მოგახსენებთ' unless correction is required by grammar\n"
+    "Forbidden: replacing with 'გაცნობებთ' just for style\n\n"
+    "Input: 'გაცნობებთ, რომ თქვენი მიერ წარმოდგენილი ინფორმაცია...'\n"
+    "Preferred: keep 'თქვენი მიერ'\n"
+    "Forbidden: 'თქვენი წარმოდგენილი ინფორმაცია...'\n\n"
     "Output only rewritten Georgian text."
 )
 
@@ -142,12 +187,26 @@ EDITOR_SYSTEM_PROMPT = (
     "- remove redundancy\n"
     "- ensure no semantic drift\n"
     "- ensure no grammar errors\n\n"
+    "CRITICAL PRESERVATION RULES (HIGHEST PRIORITY, STRICTER IN PASS2):\n"
+    "- Preserve institutional reference language and formal register.\n"
+    "- PASS2 must never downgrade institutional tone or formal reference precision.\n"
+    "- PASS2 must not modernize or simplify register.\n"
+    "- If PASS1 is already correct, PASS2 should keep it unless a correction is clearly necessary.\n"
+    "- Do NOT simplify formal reference terms into more casual equivalents.\n"
+    "- Do NOT replace 'აღნიშნული' with 'ეს'.\n"
+    "- Do NOT replace 'აღნიშნულ' with 'ამ'.\n"
+    "- Do NOT replace 'აღნიშნულ საკითხთან დაკავშირებით' with 'ამ საკითხზე'.\n"
+    "- Do NOT replace 'თქვენს მიერ' with 'თქვენი'.\n"
+    "- Do NOT replace 'მოგახსენებთ' with 'გაცნობებთ', unless the source form is clearly wrong or ungrammatical.\n"
+    "- If two versions are both grammatically correct, prefer the version closer to the original formal institutional wording.\n"
+    "- In institutional/legal text, exact register preservation is more important than naturalness.\n\n"
     "Style preference (without changing meaning):\n"
-    "- prefer clearer, more standard institutional Georgian over heavier administrative phrasing\n"
-    "- if two versions preserve meaning equally, choose the simpler and more natural one\n"
+    "- improve clarity only when meaning, structure, and formal institutional register remain unchanged\n"
+    "- do not simplify formal phrasing merely to sound more natural\n"
+    "- if two versions preserve meaning equally, prefer the one closer to the original institutional wording\n"
     "- prioritize correct Georgian inflection and morphology\n"
     "- ensure noun/adjective case agreement is correct\n"
-    "- prefer natural administrative phrasing over literal or awkward constructions\n"
+    "- do not modernize or casualize institutional reference language\n"
     "- discourage vague bureaucratic fillers unless truly necessary, including:\n"
     "  - 'აღნიშნულთან დაკავშირებით'\n"
     "  - 'წინამდებარე'\n"
@@ -194,7 +253,19 @@ EDITOR_SYSTEM_PROMPT = (
     "  Input: 'აღნიშნულთან დაკავშირებით გთხოვთ წარმოადგინოთ დამატებითი ინფორმაცია...'\n"
     "  Preferred: 'გთხოვთ, წარმოადგინოთ დამატებითი ინფორმაცია...'\n\n"
     "  Input: 'საქმის განხილვა შეჩერებულია საჭირო ინფორმაციის არარსებობის გამო'\n"
-    "  Preferred: stay close to this form; avoid shifting to heavier synonyms."
+    "  Preferred: stay close to this form; avoid shifting to heavier synonyms.\n\n"
+    "  Input: 'აღნიშნული საკითხი ჩვენს კომპეტენციას არ განეკუთვნება.'\n"
+    "  Preferred: keep 'აღნიშნული საკითხი'\n"
+    "  Forbidden: 'ეს საკითხი ჩვენს კომპეტენციას არ განეკუთვნება.'\n\n"
+    "  Input: 'გთხოვთ, გვაცნობოთ თქვენი პოზიცია აღნიშნულ საკითხთან დაკავშირებით...'\n"
+    "  Preferred: keep 'აღნიშნულ საკითხთან დაკავშირებით'\n"
+    "  Forbidden: 'გთხოვთ, გვაცნობოთ თქვენი პოზიცია ამ საკითხზე...'\n\n"
+    "  Input: 'მოგახსენებთ, რომ წარმოდგენილი ინფორმაცია არ არის სრულყოფილი...'\n"
+    "  Preferred: keep 'მოგახსენებთ' unless correction is required by grammar\n"
+    "  Forbidden: replacing with 'გაცნობებთ' just for style\n\n"
+    "  Input: 'გაცნობებთ, რომ თქვენი მიერ წარმოდგენილი ინფორმაცია...'\n"
+    "  Preferred: keep 'თქვენი მიერ'\n"
+    "  Forbidden: 'თქვენი წარმოდგენილი ინფორმაცია...'"
 )
 
 # Backward-compatible aggregate prompt constant for prompt-contract tests.
@@ -204,8 +275,8 @@ USER_PROMPT_TEMPLATE = """Rewrite the following text into stronger institutional
 
 Requirements:
 - preserve meaning exactly
-- improve naturalness and precision
-- remove unnecessary heaviness
+- improve clarity and precision only when meaning, structure, and formal institutional register remain unchanged
+- do not simplify formal phrasing merely to sound more natural
 - keep formal administrative tone
 - do not add any new information
 
@@ -387,6 +458,37 @@ def _safe_pass2_output(original: str, candidate: str) -> bool:
     return True
 
 
+def _has_negation(text: str) -> bool:
+    return any(x in text for x in [" ვერ ", " არ ", "დაუშვებელია", "შეუძლებელია"])
+
+
+def _has_completion(text: str) -> bool:
+    return any(x in text for x in ["განხორციელდა", "ჩატარდა", "დასრულდა", "გაიმართა"])
+
+
+def _has_postponed(text: str) -> bool:
+    return any(x in text for x in ["გადაიდო", "გადადებულია", "გადაიდება"])
+
+
+def _semantic_guardrail_safe(original: str, candidate: str) -> bool:
+    o = f" {original} "
+    c = f" {candidate} "
+
+    # 1. Negation removed
+    if _has_negation(o) and not _has_negation(c):
+        return False
+
+    # 2. Postponed -> completed contradiction
+    if _has_postponed(o) and _has_completion(c):
+        return False
+
+    # 3. Completed -> postponed contradiction
+    if _has_completion(o) and _has_postponed(c):
+        return False
+
+    return True
+
+
 def is_sensitive_institutional_text(text: str) -> bool:
     markers = [
         "საქართველოს",
@@ -476,9 +578,16 @@ def _run_two_pass_openai(input_text: str) -> str:
     _dprint(first_pass)
     _dprint("DEBUG: PASS1 OUTPUT END")
 
+    first_pass_stripped = first_pass.strip()
+
     if sensitive:
         _dprint("DEBUG: skipping PASS2 for sensitive text")
-        return first_pass.strip()
+        candidate = first_pass_stripped
+        if not _semantic_guardrail_safe(input_text, candidate):
+            _dprint("DEBUG: semantic guardrail triggered on final output")
+            _dprint("DEBUG: fallback to original")
+            candidate = input_text.strip()
+        return candidate
 
     _dprint("DEBUG: running PASS2")
     second_pass = _backend_openai(
@@ -496,12 +605,28 @@ def _run_two_pass_openai(input_text: str) -> str:
     pass2_safe = _safe_pass2_output(input_text, second_pass)
     pass2_violates = _violates_institutional_constraints(input_text, second_pass)
     if pass2_safe and not pass2_violates:
-        return second_pass
+        candidate = second_pass
+    elif _safe_pass2_output(input_text, first_pass_stripped):
+        _dprint("DEBUG: final output replaced with PASS1")
+        candidate = first_pass_stripped
+    else:
+        _dprint("DEBUG: final output replaced with original")
+        candidate = input_text.strip()
+
     if pass2_violates:
         _dprint("DEBUG: PASS2 rejected by institutional guardrail; falling back to PASS1")
-    if _safe_pass2_output(input_text, first_pass.strip()):
-        return first_pass.strip()
-    return input_text.strip()
+
+    # Apply semantic guardrail only at final output selection stage.
+    if not _semantic_guardrail_safe(input_text, candidate):
+        _dprint("DEBUG: semantic guardrail triggered on final output")
+        if first_pass_stripped and _semantic_guardrail_safe(input_text, first_pass_stripped):
+            _dprint("DEBUG: fallback to PASS1")
+            candidate = first_pass_stripped
+        else:
+            _dprint("DEBUG: fallback to original")
+            candidate = input_text.strip()
+
+    return candidate
 
 
 _BACKENDS: dict[str, LLMCallable] = {
